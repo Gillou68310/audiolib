@@ -170,7 +170,7 @@ int DMA_SetupTransfer(
       Port = &DMA_PortInfo[channel];
       ChannelSelect = channel & 0x3;
 
-      addr = address;
+      addr = (unsigned long)address;
       addr2 = ((addr >> 16) << 4) + ((unsigned int)addr);
 
       if (Port->Width == WORD)
@@ -265,7 +265,7 @@ char *DMA_GetCurrentPos(
       // Get page
       page = inp(Port->Page);
    }
-   return (long)((page << 12) + (addr3 << 4) + (addr2 >> 4)) << 16 | (addr2 & 0xf);
+   return (char *)((long)((page << 12) + (addr3 << 4) + (addr2 >> 4)) << 16 | (addr2 & 0xf));
 }
 
 /*---------------------------------------------------------------------

@@ -31,18 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __INTERRUPT_H
 #define __INTERRUPT_H
 
-unsigned long DisableInterrupts( void );
-void          RestoreInterrupts( unsigned long flags );
-
-#pragma aux DisableInterrupts = \
-   "pushfd",                    \
-   "pop    eax",                \
-   "cli"                        \
-   modify [ eax ];
-
-#pragma aux RestoreInterrupts = \
-   "push   eax",                \
-   "popfd"                      \
-   parm [ eax ];
+#define DISABLE_INTERRUPTS() asm { pushf; cli }
+#define ENABLE_INTERRUPTS() asm { popf; }
 
 #endif
