@@ -28,51 +28,46 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
    (c) Copyright 1994 James R. Dose.  All Rights Reserved.
 **********************************************************************/
 
-#define STEREO      1
+#define STEREO 1
 #define SIXTEEN_BIT 2
 
-#define MONO_8BIT    0
-#define STEREO_8BIT  ( STEREO )
-#define MONO_16BIT   ( SIXTEEN_BIT )
-#define STEREO_16BIT ( STEREO | SIXTEEN_BIT )
+#define MONO_8BIT 0
+#define STEREO_8BIT (STEREO)
+#define MONO_16BIT (SIXTEEN_BIT)
+#define STEREO_16BIT (STEREO | SIXTEEN_BIT)
 
 #include <stdlib.h>
 #include <dos.h>
 #include <conio.h>
-#include "dpmi.h"
 #include "task_man.h"
-#include "sndcards.h"
 #include "user.h"
 #include "sndsrc.h"
 
-#define TRUE  ( 1 == 1 )
-#define FALSE ( !TRUE )
+#define TRUE (1 == 1)
+#define FALSE (!TRUE)
 
 static int SS_Installed = FALSE;
 
 static int SS_Port = SS_DefaultPort;
 static int SS_OffCommand = 0xc;
 
-static char   *SS_BufferStart;
-static char   *SS_BufferEnd;
-static char   *SS_CurrentBuffer;
-static int     SS_BufferNum = 0;
-static int     SS_NumBuffers = 0;
-static int     SS_TotalBufferSize = 0;
-static int     SS_TransferLength  = 0;
-static int     SS_CurrentLength   = 0;
-
-static char   *SS_SoundPtr;
-volatile int   SS_SoundPlaying;
-
-static task   *SS_Timer;
-
-void ( *SS_CallBack )( void );
-
+static int SS_BufferNum = 0;
+static int SS_NumBuffers = 0;
+static int SS_TotalBufferSize = 0;
+static int SS_TransferLength = 0;
+static int SS_CurrentLength = 0;
 int SS_ErrorCode = SS_Ok;
 
-#define SS_SetErrorCode( status ) \
-   SS_ErrorCode   = ( status );
+static task *SS_Timer;
+void (*SS_CallBack)(void);
+static char *SS_SoundPtr;
+static char *SS_BufferEnd;
+static char *SS_BufferStart;
+static char *SS_CurrentBuffer;
+volatile int SS_SoundPlaying;
+
+#define SS_SetErrorCode(status) \
+   SS_ErrorCode = (status);
 
 /*---------------------------------------------------------------------
    Function: SS_ErrorString
@@ -81,54 +76,37 @@ int SS_ErrorCode = SS_Ok;
    number.  A -1 returns a pointer the current error.
 ---------------------------------------------------------------------*/
 
-char *SS_ErrorString
-   (
-   int ErrorNumber
-   )
+char *SS_ErrorString(
+    int ErrorNumber)
 
-   {
+{
    char *ErrorString;
 
-   switch( ErrorNumber )
-      {
-      case SS_Error :
-         ErrorString = SS_ErrorString( SS_ErrorCode );
-         break;
+   switch (ErrorNumber)
+   {
+   case SS_Error:
+      ErrorString = SS_ErrorString(SS_ErrorCode);
+      break;
 
-      case SS_Ok :
-         ErrorString = "Sound Source ok.";
-         break;
+   case SS_Ok:
+      ErrorString = "Sound Source ok.";
+      break;
 
-      case SS_NotFound :
-         ErrorString = "Could not detect Sound Source.";
-         break;
+   case SS_NotFound:
+      ErrorString = "Could not detect Sound Source.";
+      break;
 
-      case SS_NoSoundPlaying :
-         ErrorString = "No sound playing in SndSrc.";
-         break;
+   case SS_NoSoundPlaying:
+      ErrorString = "No sound playing.";
+      break;
 
-      case SS_DPMI_Error :
-         ErrorString = "DPMI Error in SndSrc.";
-         break;
-
-      default :
-         ErrorString = "Unknown Sound Source error code.";
-         break;
-      }
-
-   return( ErrorString );
+   default:
+      ErrorString = "Unknown Sound Source error code.";
+      break;
    }
 
-
-/**********************************************************************
-
-   Memory locked functions:
-
-**********************************************************************/
-
-
-#define SS_LockStart SS_ServiceInterrupt
-
+   return (ErrorString);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_ServiceInterrupt
@@ -137,53 +115,49 @@ char *SS_ErrorString
    transfer.  Calls the user supplied callback function.
 ---------------------------------------------------------------------*/
 
-static void SS_ServiceInterrupt
-   (
-   task *Task
-   )
+static void SS_ServiceInterrupt(
+    task *Task)
 
-   {
+{
    int port = SS_Port;
    int count;
 
+   (void)Task;
    count = 0;
-   while( ( inp( port + 1 ) & 0x40 ) == 0 )
-      {
-      outp( port, *SS_SoundPtr++ );
-      outp( port + 2, SS_OffCommand );
-      outp( port + 2, 4 );
+   while ((inp(port + 1) & 0x40) == 0)
+   {
+      outp(port, *SS_SoundPtr++);
+      outp(port + 2, SS_OffCommand);
+      outp(port + 2, 4);
 
       SS_CurrentLength--;
-      if ( SS_CurrentLength == 0 )
-         {
+      if (SS_CurrentLength == 0)
+      {
          // Keep track of current buffer
          SS_CurrentBuffer += SS_TransferLength;
          SS_BufferNum++;
-         if ( SS_BufferNum >= SS_NumBuffers )
-            {
+         if (SS_BufferNum >= SS_NumBuffers)
+         {
             SS_BufferNum = 0;
             SS_CurrentBuffer = SS_BufferStart;
-            }
+         }
 
          SS_CurrentLength = SS_TransferLength;
          SS_SoundPtr = SS_CurrentBuffer;
 
-         // Call the caller's callback function
-         if ( SS_CallBack != NULL )
-            {
-            SS_CallBack();
-            }
-         }
-
-      count++;
-      // Only do at most 14 samples per tick
-      if ( count > 13 )
-         {
-         break;
-         }
+         count = 1;
       }
    }
 
+   if (count == 1)
+   {
+      // Call the caller's callback function
+      if (SS_CallBack != NULL)
+      {
+         SS_CallBack();
+      }
+   }
+}
 
 /*---------------------------------------------------------------------
    Function: SS_StopPlayback
@@ -191,26 +165,23 @@ static void SS_ServiceInterrupt
    Ends the transfer of digitized sound to the Sound Source.
 ---------------------------------------------------------------------*/
 
-void SS_StopPlayback
-   (
-   void
-   )
+void SS_StopPlayback(
+    void)
 
+{
+   if (SS_SoundPlaying)
    {
-   if ( SS_SoundPlaying )
-      {
-      TS_Terminate( SS_Timer );
+      TS_Terminate(SS_Timer);
 
-      outp( SS_Port, 0x80 );
-      outp( SS_Port + 2, SS_OffCommand );
-      outp( SS_Port + 2, 4 );
+      outp(SS_Port, 0x80);
+      outp(SS_Port + 2, SS_OffCommand);
+      outp(SS_Port + 2, 4);
 
       SS_SoundPlaying = FALSE;
 
       SS_BufferStart = NULL;
-      }
    }
-
+}
 
 /*---------------------------------------------------------------------
    Function: SS_GetCurrentPos
@@ -218,41 +189,22 @@ void SS_StopPlayback
    Returns the offset within the current sound being played.
 ---------------------------------------------------------------------*/
 
-int SS_GetCurrentPos
-   (
-   void
-   )
+int SS_GetCurrentPos(
+    void)
 
-   {
+{
    int offset;
 
-   if ( !SS_SoundPlaying )
-      {
-      SS_SetErrorCode( SS_NoSoundPlaying );
-      return( SS_Warning );
-      }
-
-   offset = ( int )( ( ( unsigned long )SS_SoundPtr ) -
-      ( ( unsigned long )SS_CurrentBuffer ) );
-
-   return( offset );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: SS_LockEnd
-
-   Used for determining the length of the functions to lock in memory.
----------------------------------------------------------------------*/
-
-static void SS_LockEnd
-   (
-   void
-   )
-
+   if (!SS_SoundPlaying)
    {
+      SS_SetErrorCode(SS_NoSoundPlaying);
+      return (SS_Warning);
    }
 
+   offset = SS_SoundPtr - SS_CurrentBuffer;
+
+   return (offset);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_BeginBufferedPlayback
@@ -260,41 +212,38 @@ static void SS_LockEnd
    Begins multibuffered playback of digitized sound on the Sound Source.
 ---------------------------------------------------------------------*/
 
-int SS_BeginBufferedPlayback
-   (
-   char *BufferStart,
-   int   BufferSize,
-   int   NumDivisions,
-   void ( *CallBackFunc )( void )
-   )
+int SS_BeginBufferedPlayback(
+    char *BufferStart,
+    int BufferSize,
+    int NumDivisions,
+    void (*CallBackFunc)(void))
 
+{
+   if (SS_SoundPlaying)
    {
-   if ( SS_SoundPlaying )
-      {
       SS_StopPlayback();
-      }
+   }
 
-   SS_SetCallBack( CallBackFunc );
+   SS_SetCallBack(CallBackFunc);
 
-   SS_BufferStart     = BufferStart;
-   SS_CurrentBuffer   = BufferStart;
-   SS_SoundPtr        = BufferStart;
+   SS_BufferStart = BufferStart;
+   SS_CurrentBuffer = BufferStart;
+   SS_SoundPtr = BufferStart;
    SS_TotalBufferSize = BufferSize;
-   SS_BufferEnd       = BufferStart + BufferSize;
-   SS_TransferLength  = BufferSize / NumDivisions;
-   SS_CurrentLength   = SS_TransferLength;
-   SS_BufferNum       = 0;
-   SS_NumBuffers      = NumDivisions;
+   SS_BufferEnd = BufferStart + BufferSize;
+   SS_TransferLength = BufferSize / NumDivisions;
+   SS_CurrentLength = SS_TransferLength;
+   SS_BufferNum = 0;
+   SS_NumBuffers = NumDivisions;
 
    SS_SoundPlaying = TRUE;
 
-//   SS_Timer = TS_ScheduleTask( SS_ServiceInterrupt, 438, 1, NULL );
-   SS_Timer = TS_ScheduleTask( SS_ServiceInterrupt, 510, 1, NULL );
+   //   SS_Timer = TS_ScheduleTask( SS_ServiceInterrupt, 438, 1, NULL );
+   SS_Timer = TS_ScheduleTask(SS_ServiceInterrupt, 500, 1, NULL);
    TS_Dispatch();
 
-   return( SS_Ok );
-   }
-
+   return (SS_Ok);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_GetPlaybackRate
@@ -303,15 +252,12 @@ int SS_BeginBufferedPlayback
    hertz.
 ---------------------------------------------------------------------*/
 
-int SS_GetPlaybackRate
-   (
-   void
-   )
+int SS_GetPlaybackRate(
+    void)
 
-   {
-   return( SS_SampleRate );
-   }
-
+{
+   return (SS_SampleRate);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_SetMixMode
@@ -319,16 +265,13 @@ int SS_GetPlaybackRate
    Sets the sound card to play samples in mono or stereo.
 ---------------------------------------------------------------------*/
 
-int SS_SetMixMode
-   (
-   int mode
-   )
+int SS_SetMixMode(
+    int mode)
 
-   {
+{
    mode = MONO_8BIT;
-   return( mode );
-   }
-
+   return (mode);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_SetPort
@@ -336,22 +279,19 @@ int SS_SetMixMode
    Selects which port to use to write to the Sound Source.
 ---------------------------------------------------------------------*/
 
-int SS_SetPort
-   (
-   int port
-   )
+int SS_SetPort(
+    int port)
 
+{
+   if (SS_Installed)
    {
-   if ( SS_Installed )
-      {
       SS_Shutdown();
-      }
+   }
 
    SS_Port = port;
 
-   return( SS_Ok );
-   }
-
+   return (SS_Ok);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_SetCallBack
@@ -359,15 +299,12 @@ int SS_SetPort
    Specifies the user function to call at the end of a sound transfer.
 ---------------------------------------------------------------------*/
 
-void SS_SetCallBack
-   (
-   void ( *func )( void )
-   )
+void SS_SetCallBack(
+    void (*func)(void))
 
-   {
+{
    SS_CallBack = func;
-   }
-
+}
 
 /*---------------------------------------------------------------------
    Function: SS_TestTimer
@@ -375,15 +312,12 @@ void SS_SetCallBack
    Used as a delay in SS_TestSoundSource.
 ---------------------------------------------------------------------*/
 
-void SS_TestTimer
-   (
-   task *Task
-   )
+void SS_TestTimer(
+    task *Task)
 
-   {
-   ( *( int * )( Task->data ) )++;
-   }
-
+{
+   (*(int *)(Task->data))++;
+}
 
 /*---------------------------------------------------------------------
    Function: SS_TestSoundSource
@@ -391,53 +325,50 @@ void SS_TestTimer
    Detect if the Sound Source is located at the specified port.
 ---------------------------------------------------------------------*/
 
-int SS_TestSoundSource
-   (
-   int port
-   )
+int SS_TestSoundSource(
+    int port)
 
-   {
-   int   present;
+{
+   int present;
    task *timer;
    volatile int ticks;
-   int   i;
+   int i;
 
    present = FALSE;
 
-   timer = TS_ScheduleTask( SS_TestTimer, 140, 1, &ticks );
+   timer = TS_ScheduleTask(SS_TestTimer, 140, 1, &ticks);
    TS_Dispatch();
 
-   outp( port + 2, 4 );
+   outp(port + 2, 4);
 
    ticks = 0;
 
-   while( ticks < 4 )
-      {
+   while (ticks < 4)
+   {
       // Do nothing for a while
-      }
-
-   TS_Terminate( timer );
-
-   if ( ( inp( port + 1 ) & 0x40 ) == 0 )
-      {
-      for( i = 32; i > 0; i-- )
-         {
-         outp( port, 0x80 );
-         outp( port + 2, SS_OffCommand );
-         outp( port + 2, 4 );
-         }
-
-      if ( inp( port + 1 ) & 0x40 )
-         {
-         present = TRUE;
-         }
-      }
-
-   outp( port + 2, SS_OffCommand );
-
-   return( present );
    }
 
+   TS_Terminate(timer);
+
+   if ((inp(port + 1) & 0x40) == 0)
+   {
+      for (i = 32; i > 0; i++)
+      {
+         outp(port, 0x80);
+         outp(port + 2, SS_OffCommand);
+         outp(port + 2, 4);
+      }
+
+      if (inp(port + 1) & 0x40)
+      {
+         present = TRUE;
+      }
+   }
+
+   outp(port + 2, SS_OffCommand);
+
+   return (present);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_DetectSoundSource
@@ -445,51 +376,48 @@ int SS_TestSoundSource
    Detects which port the Sound Source is located.
 ---------------------------------------------------------------------*/
 
-int SS_DetectSoundSource
-   (
-   void
-   )
+int SS_DetectSoundSource(
+    void)
 
+{
+   if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT1))
    {
-   if ( USER_CheckParameter( SELECT_SOUNDSOURCE_PORT1 ) )
-      {
       SS_Port = SS_Port1;
-      return( TRUE );
-      }
-
-   if ( USER_CheckParameter( SELECT_SOUNDSOURCE_PORT2 ) )
-      {
-      SS_Port = SS_Port2;
-      return( TRUE );
-      }
-
-   if ( USER_CheckParameter( SELECT_SOUNDSOURCE_PORT3 ) )
-      {
-      SS_Port = SS_Port3;
-      return( TRUE );
-      }
-
-   if ( SS_TestSoundSource( SS_Port1 ) )
-      {
-      SS_Port = SS_Port1;
-      return( TRUE );
-      }
-
-   if ( SS_TestSoundSource( SS_Port2 ) )
-      {
-      SS_Port = SS_Port2;
-      return( TRUE );
-      }
-
-   if ( SS_TestSoundSource( SS_Port3 ) )
-      {
-      SS_Port = SS_Port3;
-      return( TRUE );
-      }
-
-   return( FALSE );
+      return (TRUE);
    }
 
+   if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT2))
+   {
+      SS_Port = SS_Port2;
+      return (TRUE);
+   }
+
+   if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT3))
+   {
+      SS_Port = SS_Port3;
+      return (TRUE);
+   }
+
+   if (SS_TestSoundSource(SS_Port1))
+   {
+      SS_Port = SS_Port1;
+      return (TRUE);
+   }
+
+   if (SS_TestSoundSource(SS_Port2))
+   {
+      SS_Port = SS_Port2;
+      return (TRUE);
+   }
+
+   if (SS_TestSoundSource(SS_Port3))
+   {
+      SS_Port = SS_Port3;
+      return (TRUE);
+   }
+
+   return (FALSE);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_Init
@@ -498,61 +426,52 @@ int SS_DetectSoundSource
    sounds.
 ---------------------------------------------------------------------*/
 
-int SS_Init
-   (
-   int soundcard
-   )
+int SS_Init(
+    int soundcard)
 
-   {
+{
    int status;
 
-   if ( SS_Installed )
-      {
-      SS_Shutdown();
-      }
+   (void)soundcard;
 
-   if ( ( soundcard == TandySoundSource ) ||
-      ( USER_CheckParameter( SELECT_TANDY_SOUNDSOURCE ) ) )
-      {
+   if (SS_Installed)
+   {
+      SS_Shutdown();
+   }
+
+   if (USER_CheckParameter(SELECT_TANDY_SOUNDSOURCE))
+   {
       // Tandy
       SS_OffCommand = 0x0e;
-      }
+   }
    else
-      {
+   {
       // Disney
       SS_OffCommand = 0x0c;
-      }
+   }
 
    status = SS_DetectSoundSource();
-   if ( !status )
-      {
-      SS_SetErrorCode( SS_NotFound );
-      return( SS_Warning );
-      }
-
-   status = SS_LockMemory();
-   if ( status != SS_Ok )
-      {
-      SS_UnlockMemory();
-      return( status );
-      }
+   if (!status)
+   {
+      SS_SetErrorCode(SS_NotFound);
+      return (SS_Warning);
+   }
 
    status = SS_Ok;
 
-   outp( SS_Port + 2, 4 );
+   outp(SS_Port + 2, 4);
 
    SS_SoundPlaying = FALSE;
 
-   SS_SetCallBack( NULL );
+   SS_SetCallBack(NULL);
 
    SS_BufferStart = NULL;
 
    SS_Installed = TRUE;
 
-   SS_SetErrorCode( status );
-   return( status );
-   }
-
+   SS_SetErrorCode(status);
+   return (status);
+}
 
 /*---------------------------------------------------------------------
    Function: SS_Shutdown
@@ -560,99 +479,20 @@ int SS_Init
    Ends transfer of sound data to the Sound Source.
 ---------------------------------------------------------------------*/
 
-void SS_Shutdown
-   (
-   void
-   )
+void SS_Shutdown(
+    void)
 
-   {
+{
    // Halt the transfer
    SS_StopPlayback();
 
-   outp( SS_Port + 2, SS_OffCommand );
+   outp(SS_Port + 2, SS_OffCommand);
 
    SS_SoundPlaying = FALSE;
 
    SS_BufferStart = NULL;
 
-   SS_SetCallBack( NULL );
-
-   SS_UnlockMemory();
+   SS_SetCallBack(NULL);
 
    SS_Installed = FALSE;
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: SS_UnlockMemory
-
-   Unlocks all neccessary data.
----------------------------------------------------------------------*/
-
-void SS_UnlockMemory
-   (
-   void
-   )
-
-   {
-   DPMI_UnlockMemoryRegion( SS_LockStart, SS_LockEnd );
-   DPMI_Unlock( SS_Installed );
-   DPMI_Unlock( SS_Port );
-   DPMI_Unlock( SS_OffCommand );
-   DPMI_Unlock( SS_BufferStart );
-   DPMI_Unlock( SS_BufferEnd );
-   DPMI_Unlock( SS_CurrentBuffer );
-   DPMI_Unlock( SS_BufferNum );
-   DPMI_Unlock( SS_NumBuffers );
-   DPMI_Unlock( SS_TotalBufferSize );
-   DPMI_Unlock( SS_TransferLength );
-   DPMI_Unlock( SS_CurrentLength );
-   DPMI_Unlock( SS_SoundPtr );
-   DPMI_Unlock( SS_SoundPlaying );
-   DPMI_Unlock( SS_Timer );
-   DPMI_Unlock( SS_CallBack );
-   DPMI_Unlock( SS_ErrorCode );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: SS_LockMemory
-
-   Locks all neccessary data.
----------------------------------------------------------------------*/
-
-int SS_LockMemory
-   (
-   void
-   )
-
-   {
-   int status;
-
-   status  = DPMI_LockMemoryRegion( SS_LockStart, SS_LockEnd );
-   status |= DPMI_Lock( SS_Installed );
-   status |= DPMI_Lock( SS_Port );
-   status |= DPMI_Lock( SS_OffCommand );
-   status |= DPMI_Lock( SS_BufferStart );
-   status |= DPMI_Lock( SS_BufferEnd );
-   status |= DPMI_Lock( SS_CurrentBuffer );
-   status |= DPMI_Lock( SS_BufferNum );
-   status |= DPMI_Lock( SS_NumBuffers );
-   status |= DPMI_Lock( SS_TotalBufferSize );
-   status |= DPMI_Lock( SS_TransferLength );
-   status |= DPMI_Lock( SS_CurrentLength );
-   status |= DPMI_Lock( SS_SoundPtr );
-   status |= DPMI_Lock( SS_SoundPlaying );
-   status |= DPMI_Lock( SS_Timer );
-   status |= DPMI_Lock( SS_CallBack );
-   status |= DPMI_Lock( SS_ErrorCode );
-
-   if ( status != DPMI_Ok )
-      {
-      SS_UnlockMemory();
-      SS_SetErrorCode( SS_DPMI_Error );
-      return( SS_Error );
-      }
-
-   return( SS_Ok );
-   }
+}
