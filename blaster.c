@@ -83,7 +83,7 @@ static char *BLASTER_CurrentDMABuffer;
 static int BLASTER_IntController1Mask;
 static int BLASTER_IntController2Mask;
 static int BLASTER_TotalDMABufferSize;
-static void(_interrupt _far *BLASTER_OldInt)(void);
+static void(interrupt far *BLASTER_OldInt)(void);
 static void (*BLASTER_CallBack)(void);
 static int BLASTER_Version;
 static char *BLASTER_DMABuffer;
@@ -240,7 +240,7 @@ void BLASTER_DisableInterrupt(
    transfer.  Calls the user supplied callback function.
 ---------------------------------------------------------------------*/
 
-void _interrupt _far BLASTER_ServiceInterrupt(
+void interrupt far BLASTER_ServiceInterrupt(
     void)
 
 {
