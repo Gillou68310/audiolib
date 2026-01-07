@@ -32,10 +32,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <string.h>
 #include "user.h"
 
-#define TRUE  ( 1 == 1 )
-#define FALSE ( !TRUE )
+#define TRUE (1 == 1)
+#define FALSE (!TRUE)
 
-extern int   _argc;
+extern int _argc;
 extern char **_argv;
 
 /*---------------------------------------------------------------------
@@ -44,39 +44,36 @@ extern char **_argv;
    Checks if the specified string is present in the command line.
 ---------------------------------------------------------------------*/
 
-int USER_CheckParameter
-   (
-   const char *parameter
-   )
+int USER_CheckParameter(
+    const char *parameter)
 
-   {
+{
    int i;
    int found;
    char *ptr;
 
    found = FALSE;
    i = 1;
-   while( i < _argc )
-      {
-      ptr = _argv[ i ];
+   while (i < _argc)
+   {
+      ptr = _argv[i];
 
       // Only check parameters preceded by - or /
-      if ( ( *ptr == '-' ) || ( *ptr == '/' ) )
-         {
+      if ((*ptr == '-') || (*ptr == '/'))
+      {
          ptr++;
-         if ( stricmp( parameter, ptr ) == 0 )
-            {
+         if (stricmp(parameter, ptr) == 0)
+         {
             found = TRUE;
             break;
-            }
          }
-
-      i++;
       }
 
-   return( found );
+      i++;
    }
 
+   return (found);
+}
 
 /*---------------------------------------------------------------------
    Function: USER_GetText
@@ -85,36 +82,34 @@ int USER_CheckParameter
    and returns a pointer to the text following it.
 ---------------------------------------------------------------------*/
 
-char *USER_GetText
-   (
-   const char *parameter
-   )
+char *USER_GetText(
+    const char *parameter)
 
-   {
+{
    int i;
    char *text;
    char *ptr;
 
    text = NULL;
    i = 1;
-   while( i < _argc )
-      {
-      ptr = _argv[ i ];
+   while (i < _argc)
+   {
+      ptr = _argv[i];
 
       // Only check parameters preceded by - or /
-      if ( ( *ptr == '-' ) || ( *ptr == '/' ) )
-         {
+      if ((*ptr == '-') || (*ptr == '/'))
+      {
          ptr++;
-         if ( stricmp( parameter, ptr ) == 0 )
-            {
+         if (stricmp(parameter, ptr) == 0)
+         {
             i++;
-            text = _argv[ i ];
+            text = _argv[i];
             break;
-            }
          }
-
-      i++;
       }
 
-   return( text );
+      i++;
    }
+
+   return (text);
+}
