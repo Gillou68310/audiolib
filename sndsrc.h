@@ -61,7 +61,7 @@ int SS_GetPlaybackRate(void);
 int SS_SetMixMode(int mode);
 int SS_SetPort(int port);
 void SS_SetCallBack(void (*func)(void));
-int SS_Init(int soundcard);
+int SS_Init(void);
 void SS_Shutdown(void);
 
 #endif

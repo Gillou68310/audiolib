@@ -1053,7 +1053,8 @@ TestDelay2:
    asm out dx, al;
    asm sub al, ah;
 TestExit:
-   asm and ax, 0ffh;
+   //asm and ax, 0ffh;
+   return _AX & 0xff;
 }
 
 /*---------------------------------------------------------------------

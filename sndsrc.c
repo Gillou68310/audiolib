@@ -427,12 +427,10 @@ int SS_DetectSoundSource(
 ---------------------------------------------------------------------*/
 
 int SS_Init(
-    int soundcard)
+    void)
 
 {
    int status;
-
-   (void)soundcard;
 
    if (SS_Installed)
    {
