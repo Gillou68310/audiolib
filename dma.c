@@ -44,14 +44,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 typedef struct
 {
-   int Valid;
-   int Width;
-   int Mask;
-   int Mode;
-   int Clear;
-   int Page;
-   int Address;
-   int Length;
+    int Valid;
+    int Width;
+    int Mask;
+    int Mode;
+    int Clear;
+    int Page;
+    int Address;
+    int Length;
 } DMA_PORT;
 
 static const DMA_PORT DMA_PortInfo[DMA_MaxChannel + 1] =
@@ -69,7 +69,7 @@ static const DMA_PORT DMA_PortInfo[DMA_MaxChannel + 1] =
 int DMA_ErrorCode = DMA_Ok;
 
 #define DMA_SetErrorCode(status) \
-   DMA_ErrorCode = (status);
+    DMA_ErrorCode = (status);
 
 /*---------------------------------------------------------------------
    Function: DMA_ErrorString
@@ -82,32 +82,32 @@ char *DMA_ErrorString(
     int ErrorNumber)
 
 {
-   char *ErrorString;
+    char *ErrorString;
 
-   switch (ErrorNumber)
-   {
-   case DMA_Error:
-      ErrorString = DMA_ErrorString(DMA_ErrorCode);
-      break;
+    switch (ErrorNumber)
+    {
+    case DMA_Error:
+        ErrorString = DMA_ErrorString(DMA_ErrorCode);
+        break;
 
-   case DMA_Ok:
-      ErrorString = "DMA channel ok.";
-      break;
+    case DMA_Ok:
+        ErrorString = "DMA channel ok.";
+        break;
 
-   case DMA_ChannelOutOfRange:
-      ErrorString = "DMA channel out of valid range.";
-      break;
+    case DMA_ChannelOutOfRange:
+        ErrorString = "DMA channel out of valid range.";
+        break;
 
-   case DMA_InvalidChannel:
-      ErrorString = "Unsupported DMA channel.";
-      break;
+    case DMA_InvalidChannel:
+        ErrorString = "Unsupported DMA channel.";
+        break;
 
-   default:
-      ErrorString = "Unknown DMA error code.";
-      break;
-   }
+    default:
+        ErrorString = "Unknown DMA error code.";
+        break;
+    }
 
-   return (ErrorString);
+    return (ErrorString);
 }
 
 /*---------------------------------------------------------------------
@@ -120,25 +120,25 @@ int DMA_VerifyChannel(
     int channel)
 
 {
-   int status;
-   int Error;
+    int status;
+    int Error;
 
-   status = DMA_Ok;
-   Error = DMA_Ok;
+    status = DMA_Ok;
+    Error = DMA_Ok;
 
-   if ((channel < 0) || (DMA_MaxChannel < channel))
-   {
-      Error = DMA_ChannelOutOfRange;
-      status = DMA_Error;
-   }
-   else if (DMA_PortInfo[channel].Valid == INVALID)
-   {
-      Error = DMA_InvalidChannel;
-      status = DMA_Error;
-   }
+    if ((channel < 0) || (DMA_MaxChannel < channel))
+    {
+        Error = DMA_ChannelOutOfRange;
+        status = DMA_Error;
+    }
+    else if (DMA_PortInfo[channel].Valid == INVALID)
+    {
+        Error = DMA_InvalidChannel;
+        status = DMA_Error;
+    }
 
-   DMA_SetErrorCode(Error);
-   return (status);
+    DMA_SetErrorCode(Error);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -153,75 +153,75 @@ int DMA_SetupTransfer(
     unsigned int length)
 
 {
-   DMA_PORT *Port;
-   unsigned long addr;
-   int ChannelSelect;
-   unsigned long addr2;
-   int Page;
-   int HiByte;
-   int LoByte;
-   unsigned int TransferLength;
-   int status;
+    DMA_PORT *Port;
+    unsigned long addr;
+    int ChannelSelect;
+    unsigned long addr2;
+    int Page;
+    int HiByte;
+    int LoByte;
+    unsigned int TransferLength;
+    int status;
 
-   status = DMA_VerifyChannel(channel);
+    status = DMA_VerifyChannel(channel);
 
-   if (status == DMA_Ok)
-   {
-      Port = &DMA_PortInfo[channel];
-      ChannelSelect = channel & 0x3;
+    if (status == DMA_Ok)
+    {
+        Port = &DMA_PortInfo[channel];
+        ChannelSelect = channel & 0x3;
 
-      addr = (unsigned long)address;
-      addr2 = ((addr >> 16) << 4) + ((unsigned int)addr);
+        addr = (unsigned long)address;
+        addr2 = ((addr >> 16) << 4) + ((unsigned int)addr);
 
-      if (Port->Width == WORD)
-      {
-         Page = (addr2 >> 16) & 255;
-         HiByte = (addr2 >> 9) & 255;
-         LoByte = (addr2 >> 1) & 255;
+        if (Port->Width == WORD)
+        {
+            Page = (addr2 >> 16) & 255;
+            HiByte = (addr2 >> 9) & 255;
+            LoByte = (addr2 >> 1) & 255;
 
-         // Convert the length in bytes to the length in words
-         TransferLength = (length + 1) >> 1;
+            // Convert the length in bytes to the length in words
+            TransferLength = (length + 1) >> 1;
 
-         // The length is always one less the number of bytes or words
-         // that we're going to send
-         TransferLength--;
-      }
-      else
-      {
-         Page = (addr2 >> 16) & 255;
-         HiByte = (addr2 >> 8) & 255;
-         LoByte = addr2 & 255;
+            // The length is always one less the number of bytes or words
+            // that we're going to send
+            TransferLength--;
+        }
+        else
+        {
+            Page = (addr2 >> 16) & 255;
+            HiByte = (addr2 >> 8) & 255;
+            LoByte = addr2 & 255;
 
-         // The length is always one less the number of bytes or words
-         // that we're going to send
-         TransferLength = length - 1;
-      }
+            // The length is always one less the number of bytes or words
+            // that we're going to send
+            TransferLength = length - 1;
+        }
 
-      // Mask off DMA channel
-      outp(Port->Mask, 4 | ChannelSelect);
+        // Mask off DMA channel
+        outp(Port->Mask, 4 | ChannelSelect);
 
-      // Clear flip-flop to lower byte with any data
-      outp(Port->Clear, 0);
+        // Clear flip-flop to lower byte with any data
+        outp(Port->Clear, 0);
 
-      // Set DMA mode
-      outp(Port->Mode, 0x58 | ChannelSelect);
+        // Set DMA mode
+        outp(Port->Mode, 0x58 | ChannelSelect);
 
-      // Send address
-      outp(Port->Address, LoByte);
-      outp(Port->Address, HiByte);
+        // Send address
+        outp(Port->Address, LoByte);
+        outp(Port->Address, HiByte);
 
-      // Send page
-      outp(Port->Page, Page);
+        // Send page
+        outp(Port->Page, Page);
 
-      // Send length
-      outp(Port->Length, TransferLength);
-      outp(Port->Length, TransferLength >> 8);
+        // Send length
+        outp(Port->Length, TransferLength);
+        outp(Port->Length, TransferLength >> 8);
 
-      // enable DMA channel
-      outp(Port->Mask, ChannelSelect);
-   }
+        // enable DMA channel
+        outp(Port->Mask, ChannelSelect);
+    }
 
-   return (status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -234,38 +234,38 @@ char *DMA_GetCurrentPos(
     int channel)
 
 {
-   DMA_PORT *Port;
-   register unsigned int page;
-   register unsigned int addr2;
-   int status;
-   unsigned int addr3;
+    DMA_PORT *Port;
+    register unsigned int page;
+    register unsigned int addr2;
+    int status;
+    unsigned int addr3;
 
-   page = NULL;
-   addr2 = NULL;
-   addr3 = NULL;
-   status = DMA_VerifyChannel(channel);
+    page = NULL;
+    addr2 = NULL;
+    addr3 = NULL;
+    status = DMA_VerifyChannel(channel);
 
-   if (status == DMA_Ok)
-   {
-      Port = &DMA_PortInfo[channel];
+    if (status == DMA_Ok)
+    {
+        Port = &DMA_PortInfo[channel];
 
-      if (Port->Width == WORD)
-      {
-         // Get address
-         addr2 = inp(Port->Address) << 1;
-         addr3 = inp(Port->Address) << 1;
-      }
-      else
-      {
-         // Get address
-         addr2 = inp(Port->Address);
-         addr3 = inp(Port->Address);
-      }
+        if (Port->Width == WORD)
+        {
+            // Get address
+            addr2 = inp(Port->Address) << 1;
+            addr3 = inp(Port->Address) << 1;
+        }
+        else
+        {
+            // Get address
+            addr2 = inp(Port->Address);
+            addr3 = inp(Port->Address);
+        }
 
-      // Get page
-      page = inp(Port->Page);
-   }
-   return (char *)((long)((page << 12) + (addr3 << 4) + (addr2 >> 4)) << 16 | (addr2 & 0xf));
+        // Get page
+        page = inp(Port->Page);
+    }
+    return (char *)((long)((page << 12) + (addr3 << 4) + (addr2 >> 4)) << 16 | (addr2 & 0xf));
 }
 
 /*---------------------------------------------------------------------
@@ -278,38 +278,38 @@ int DMA_GetTransferCount(
     int channel)
 
 {
-   DMA_PORT *Port;
-   int count;
-   int status;
+    DMA_PORT *Port;
+    int count;
+    int status;
 
-   status = DMA_Ok;
+    status = DMA_Ok;
 
-   count = 0;
+    count = 0;
 
-   if ((channel < 0) || (DMA_MaxChannel < channel))
-   {
-      status = DMA_ChannelOutOfRange;
-   }
-   else if (DMA_PortInfo[channel].Valid == INVALID)
-   {
-      status = DMA_InvalidChannel;
-   }
+    if ((channel < 0) || (DMA_MaxChannel < channel))
+    {
+        status = DMA_ChannelOutOfRange;
+    }
+    else if (DMA_PortInfo[channel].Valid == INVALID)
+    {
+        status = DMA_InvalidChannel;
+    }
 
-   if (status == DMA_Ok)
-   {
-      Port = &DMA_PortInfo[channel];
+    if (status == DMA_Ok)
+    {
+        Port = &DMA_PortInfo[channel];
 
-      outp(Port->Clear, 0);
-      count = inp(Port->Length);
-      count += inp(Port->Length) << 8;
+        outp(Port->Clear, 0);
+        count = inp(Port->Length);
+        count += inp(Port->Length) << 8;
 
-      if (Port->Width == WORD)
-      {
-         count <<= 1;
-      }
-   }
+        if (Port->Width == WORD)
+        {
+            count <<= 1;
+        }
+    }
 
-   DMA_SetErrorCode(status);
+    DMA_SetErrorCode(status);
 
-   return (count);
+    return (count);
 }

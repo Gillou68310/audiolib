@@ -115,18 +115,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define BlasterEnv_Midi 'P'
 
 #define CalcTimeConstant(rate, samplesize) \
-   ((65536L - (256000000L / ((samplesize) * (rate)))) >> 8)
+    ((65536L - (256000000L / ((samplesize) * (rate)))) >> 8)
 
 #define CalcSamplingRate(tc) \
-   (256000000L / (65536L - (tc << 8)))
+    (256000000L / (65536L - (tc << 8)))
 
 typedef struct
 {
-   unsigned int IsSupported;
-   unsigned int HasMixer;
-   unsigned int MaxMixMode;
-   unsigned int MinSamplingRate;
-   unsigned int MaxSamplingRate;
+    unsigned int IsSupported;
+    unsigned int HasMixer;
+    unsigned int MaxMixMode;
+    unsigned int MinSamplingRate;
+    unsigned int MaxSamplingRate;
 } CARD_CAPABILITY;
 
 #endif

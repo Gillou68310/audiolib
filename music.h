@@ -35,23 +35,23 @@ extern int MUSIC_ErrorCode;
 
 enum MUSIC_ERRORS
 {
-   MUSIC_Warning = -2,
-   MUSIC_Error = -1,
-   MUSIC_Ok = 0,
-   MUSIC_SoundCardError,
-   MUSIC_InvalidCard,
-   MUSIC_MidiError,
-   MUSIC_TaskManError,
-   MUSIC_FMNotDetected,
+    MUSIC_Warning = -2,
+    MUSIC_Error = -1,
+    MUSIC_Ok = 0,
+    MUSIC_SoundCardError,
+    MUSIC_InvalidCard,
+    MUSIC_MidiError,
+    MUSIC_TaskManError,
+    MUSIC_FMNotDetected,
 };
 
 typedef struct
 {
-   unsigned long tickposition;
-   unsigned long milliseconds;
-   unsigned int measure;
-   unsigned int beat;
-   unsigned int tick;
+    unsigned long tickposition;
+    unsigned long milliseconds;
+    unsigned int measure;
+    unsigned int beat;
+    unsigned int tick;
 } songposition;
 
 #define MUSIC_LoopSong (1 == 1)

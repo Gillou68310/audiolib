@@ -33,11 +33,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 enum SS_ERRORS
 {
-   SS_Warning = -2,
-   SS_Error = -1,
-   SS_Ok = 0,
-   SS_NotFound,
-   SS_NoSoundPlaying
+    SS_Warning = -2,
+    SS_Error = -1,
+    SS_Ok = 0,
+    SS_NotFound,
+    SS_NoSoundPlaying
 };
 
 #define SELECT_SOUNDSOURCE_PORT1 "ss1"

@@ -23,9 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 enum AL_Errors
 {
-   AL_Warning = -2,
-   AL_Error = -1,
-   AL_Ok = 0,
+    AL_Warning = -2,
+    AL_Error = -1,
+    AL_Ok = 0,
 };
 
 #define AL_MaxVolume 127

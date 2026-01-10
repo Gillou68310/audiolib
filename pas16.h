@@ -33,15 +33,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 enum PAS_ERRORS
 {
-   PAS_Warning = -2,
-   PAS_Error = -1,
-   PAS_Ok = 0,
-   PAS_DriverNotFound,
-   PAS_DmaError,
-   PAS_InvalidIrq,
-   PAS_Dos4gwIrqError,
-   PAS_NoSoundPlaying,
-   PAS_CardNotFound,
+    PAS_Warning = -2,
+    PAS_Error = -1,
+    PAS_Ok = 0,
+    PAS_DriverNotFound,
+    PAS_DmaError,
+    PAS_InvalidIrq,
+    PAS_Dos4gwIrqError,
+    PAS_NoSoundPlaying,
+    PAS_CardNotFound,
 };
 
 #define PAS_MaxMixMode STEREO_16BIT

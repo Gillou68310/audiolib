@@ -34,15 +34,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __SNDCARDS_H
 
 typedef enum
-   {
-   SoundBlaster,
-   ProAudioSpectrum,
-   Adlib,
-   GenMidi,
-   WaveBlaster,
-   SoundSource,
-   TandySoundSource,
-   NumSoundCards
-   } soundcardnames;
+{
+    SoundBlaster,
+    ProAudioSpectrum,
+    Adlib,
+    GenMidi,
+    WaveBlaster,
+    SoundSource,
+    TandySoundSource,
+    NumSoundCards
+} soundcardnames;
 
 #endif

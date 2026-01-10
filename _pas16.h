@@ -106,10 +106,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define SelectSampleBufferCount 0x74 // 01110100b
 
 #define CalcTimeInterval(rate) \
-   (1193180UL / (rate))
+    (1193180UL / (rate))
 
 #define CalcSamplingRate(interval) \
-   (1193180UL / (interval))
+    (1193180UL / (interval))
 
 #define MV_Signature 0x4d56
 #define MV_SoundInt 0x2f
@@ -153,52 +153,52 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 typedef struct
 {
-   unsigned char sysspkrtmr;   /*   42 System Speaker Timer Address */
-   unsigned char systmrctlr;   /*   43 System Timer Control         */
-   unsigned char sysspkrreg;   /*   61 System Speaker Register      */
-   unsigned char joystick;     /*  201 Joystick Register            */
-   unsigned char lfmaddr;      /*  388 Left  FM Synth Address       */
-   unsigned char lfmdata;      /*  389 Left  FM Synth Data          */
-   unsigned char rfmaddr;      /*  38A Right FM Synth Address       */
-   unsigned char rfmdata;      /*  38B Right FM Synth Data          */
-   unsigned char dfmaddr;      /*  788 Dual  FM Synth Address       */
-   unsigned char dfmdata;      /*  789 Dual  FM Synth Data          */
-   unsigned char RESRVD1[1];   /*      reserved                     */
-   unsigned char paudiomixr;   /*  78B Paralllel Audio Mixer Control*/
-   unsigned char audiomixr;    /*  B88 Audio Mixer Control          */
-   unsigned char intrctlrst;   /*  B89 Interrupt Status             */
-   unsigned char audiofilt;    /*  B8A Audio Filter Control         */
-   unsigned char intrctlr;     /*  B8B Interrupt Control            */
-   unsigned char pcmdata;      /*  F88 PCM Data I/O Register        */
-   unsigned char RESRVD2;      /*      reserved                     */
-   unsigned char crosschannel; /*  F8A Cross Channel                */
-   unsigned char RESRVD3;      /*      reserved                     */
-   unsigned short samplerate;  /* 1388 Sample Rate Timer            */
-   unsigned short samplecnt;   /* 1389 Sample Count Register        */
-   unsigned short spkrtmr;     /* 138A Shadow Speaker Timer Count   */
-   unsigned char tmrctlr;      /* 138B Shadow Speaker Timer Control */
-   unsigned char mdirqvect;    /* 1788 MIDI IRQ Vector Register     */
-   unsigned char mdsysctlr;    /* 1789 MIDI System Control Register */
-   unsigned char mdsysstat;    /* 178A MIDI IRQ Status Register     */
-   unsigned char mdirqclr;     /* 178B MIDI IRQ Clear Register      */
-   unsigned char mdgroup1;     /* 1B88 MIDI Group #1 Register       */
-   unsigned char mdgroup2;     /* 1B89 MIDI Group #2 Register       */
-   unsigned char mdgroup3;     /* 1B8A MIDI Group #3 Register       */
-   unsigned char mdgroup4;     /* 1B8B MIDI Group #4 Register       */
+    unsigned char sysspkrtmr;   /*   42 System Speaker Timer Address */
+    unsigned char systmrctlr;   /*   43 System Timer Control         */
+    unsigned char sysspkrreg;   /*   61 System Speaker Register      */
+    unsigned char joystick;     /*  201 Joystick Register            */
+    unsigned char lfmaddr;      /*  388 Left  FM Synth Address       */
+    unsigned char lfmdata;      /*  389 Left  FM Synth Data          */
+    unsigned char rfmaddr;      /*  38A Right FM Synth Address       */
+    unsigned char rfmdata;      /*  38B Right FM Synth Data          */
+    unsigned char dfmaddr;      /*  788 Dual  FM Synth Address       */
+    unsigned char dfmdata;      /*  789 Dual  FM Synth Data          */
+    unsigned char RESRVD1[1];   /*      reserved                     */
+    unsigned char paudiomixr;   /*  78B Paralllel Audio Mixer Control*/
+    unsigned char audiomixr;    /*  B88 Audio Mixer Control          */
+    unsigned char intrctlrst;   /*  B89 Interrupt Status             */
+    unsigned char audiofilt;    /*  B8A Audio Filter Control         */
+    unsigned char intrctlr;     /*  B8B Interrupt Control            */
+    unsigned char pcmdata;      /*  F88 PCM Data I/O Register        */
+    unsigned char RESRVD2;      /*      reserved                     */
+    unsigned char crosschannel; /*  F8A Cross Channel                */
+    unsigned char RESRVD3;      /*      reserved                     */
+    unsigned short samplerate;  /* 1388 Sample Rate Timer            */
+    unsigned short samplecnt;   /* 1389 Sample Count Register        */
+    unsigned short spkrtmr;     /* 138A Shadow Speaker Timer Count   */
+    unsigned char tmrctlr;      /* 138B Shadow Speaker Timer Control */
+    unsigned char mdirqvect;    /* 1788 MIDI IRQ Vector Register     */
+    unsigned char mdsysctlr;    /* 1789 MIDI System Control Register */
+    unsigned char mdsysstat;    /* 178A MIDI IRQ Status Register     */
+    unsigned char mdirqclr;     /* 178B MIDI IRQ Clear Register      */
+    unsigned char mdgroup1;     /* 1B88 MIDI Group #1 Register       */
+    unsigned char mdgroup2;     /* 1B89 MIDI Group #2 Register       */
+    unsigned char mdgroup3;     /* 1B8A MIDI Group #3 Register       */
+    unsigned char mdgroup4;     /* 1B8B MIDI Group #4 Register       */
 } MVState;
 
 typedef struct
 {
-   unsigned long SetMixer;
-   unsigned long SetVolume;
-   unsigned long SetFilter;
-   unsigned long SetCrossChannel;
-   unsigned long GetMixer;
-   unsigned long GetVolume;
-   unsigned long GetFilter;
-   unsigned long GetCrossChannel;
-   unsigned long ReadSound;
-   unsigned long FMSplit;
+    unsigned long SetMixer;
+    unsigned long SetVolume;
+    unsigned long SetFilter;
+    unsigned long SetCrossChannel;
+    unsigned long GetMixer;
+    unsigned long GetVolume;
+    unsigned long GetFilter;
+    unsigned long GetCrossChannel;
+    unsigned long ReadSound;
+    unsigned long FMSplit;
 } MVFunc;
 
 int PAS_CheckForDriver(void);

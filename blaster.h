@@ -33,12 +33,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 typedef struct
 {
-   int Address;
-   int Type;
-   int Interrupt;
-   int Dma8;
-   int Dma16;
-   int Midi;
+    int Address;
+    int Type;
+    int Interrupt;
+    int Dma8;
+    int Dma16;
+    int Midi;
 } BLASTER_CONFIG;
 
 extern BLASTER_CONFIG BLASTER_Config;
@@ -47,29 +47,29 @@ extern BLASTER_CONFIG BLASTER_Config;
 
 enum BLASTER_ERRORS
 {
-   BLASTER_Warning = -2,
-   BLASTER_Error = -1,
-   BLASTER_Ok = 0,
-   BLASTER_EnvNotFound,
-   BLASTER_AddrNotSet,
-   BLASTER_InterruptNotSet,
-   BLASTER_DMANotSet,
-   BLASTER_TypeNotSet,
-   BLASTER_InvalidParameter,
-   BLASTER_CardNotReady,
-   BLASTER_NoSoundPlaying,
-   BLASTER_InvalidIrq,
-   BLASTER_DmaError,
-   BLASTER_NoMixer,
+    BLASTER_Warning = -2,
+    BLASTER_Error = -1,
+    BLASTER_Ok = 0,
+    BLASTER_EnvNotFound,
+    BLASTER_AddrNotSet,
+    BLASTER_InterruptNotSet,
+    BLASTER_DMANotSet,
+    BLASTER_TypeNotSet,
+    BLASTER_InvalidParameter,
+    BLASTER_CardNotReady,
+    BLASTER_NoSoundPlaying,
+    BLASTER_InvalidIrq,
+    BLASTER_DmaError,
+    BLASTER_NoMixer,
 };
 
 enum BLASTER_Types
 {
-   SB = 1,
-   SBPro = 2,
-   SB20 = 3,
-   SBPro2 = 4,
-   SB16 = 6
+    SB = 1,
+    SBPro = 2,
+    SB20 = 3,
+    SBPro2 = 4,
+    SB16 = 6
 };
 
 #define BLASTER_MinCardType SB

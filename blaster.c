@@ -89,7 +89,7 @@ static int BLASTER_Version;
 static char *BLASTER_DMABuffer;
 
 #define BLASTER_SetErrorCode(status) \
-   BLASTER_ErrorCode = (status);
+    BLASTER_ErrorCode = (status);
 
 /*---------------------------------------------------------------------
    Function: BLASTER_ErrorString
@@ -102,68 +102,68 @@ char *BLASTER_ErrorString(
     int ErrorNumber)
 
 {
-   char *ErrorString;
+    char *ErrorString;
 
-   switch (ErrorNumber)
-   {
-   case BLASTER_Error:
-      ErrorString = BLASTER_ErrorString(BLASTER_ErrorCode);
-      break;
+    switch (ErrorNumber)
+    {
+    case BLASTER_Error:
+        ErrorString = BLASTER_ErrorString(BLASTER_ErrorCode);
+        break;
 
-   case BLASTER_Ok:
-      ErrorString = "Sound Blaster ok.";
-      break;
+    case BLASTER_Ok:
+        ErrorString = "Sound Blaster ok.";
+        break;
 
-   case BLASTER_EnvNotFound:
-      ErrorString = "BLASTER evironment variable not set.";
-      break;
+    case BLASTER_EnvNotFound:
+        ErrorString = "BLASTER evironment variable not set.";
+        break;
 
-   case BLASTER_AddrNotSet:
-      ErrorString = "Missing Sound Blaster address in BLASTER evironment variable.";
-      break;
+    case BLASTER_AddrNotSet:
+        ErrorString = "Missing Sound Blaster address in BLASTER evironment variable.";
+        break;
 
-   case BLASTER_InterruptNotSet:
-      ErrorString = "Missing Sound Blaster interrupt in BLASTER evironment variable.";
-      break;
+    case BLASTER_InterruptNotSet:
+        ErrorString = "Missing Sound Blaster interrupt in BLASTER evironment variable.";
+        break;
 
-   case BLASTER_DMANotSet:
-      ErrorString = "Missing Sound Blaster DMA channel in BLASTER evironment variable.";
-      break;
+    case BLASTER_DMANotSet:
+        ErrorString = "Missing Sound Blaster DMA channel in BLASTER evironment variable.";
+        break;
 
-   case BLASTER_TypeNotSet:
-      ErrorString = "Sound Blaster card type not set.";
-      break;
+    case BLASTER_TypeNotSet:
+        ErrorString = "Sound Blaster card type not set.";
+        break;
 
-   case BLASTER_InvalidParameter:
-      ErrorString = "Invalid parameter in BLASTER evironment variable.";
-      break;
+    case BLASTER_InvalidParameter:
+        ErrorString = "Invalid parameter in BLASTER evironment variable.";
+        break;
 
-   case BLASTER_CardNotReady:
-      ErrorString = "Sound Blaster card not ready.";
-      break;
+    case BLASTER_CardNotReady:
+        ErrorString = "Sound Blaster card not ready.";
+        break;
 
-   case BLASTER_NoSoundPlaying:
-      ErrorString = "No sound playing.";
-      break;
+    case BLASTER_NoSoundPlaying:
+        ErrorString = "No sound playing.";
+        break;
 
-   case BLASTER_InvalidIrq:
-      ErrorString = "Invalid Sound Blaster Irq.";
-      break;
+    case BLASTER_InvalidIrq:
+        ErrorString = "Invalid Sound Blaster Irq.";
+        break;
 
-   case BLASTER_DmaError:
-      ErrorString = DMA_ErrorString(DMA_Error);
-      break;
+    case BLASTER_DmaError:
+        ErrorString = DMA_ErrorString(DMA_Error);
+        break;
 
-   case BLASTER_NoMixer:
-      ErrorString = "Mixer not available on selected Sound Blaster card.";
-      break;
+    case BLASTER_NoMixer:
+        ErrorString = "Mixer not available on selected Sound Blaster card.";
+        break;
 
-   default:
-      ErrorString = "Unknown Sound Blaster error code.";
-      break;
-   }
+    default:
+        ErrorString = "Unknown Sound Blaster error code.";
+        break;
+    }
 
-   return (ErrorString);
+    return (ErrorString);
 }
 
 /*---------------------------------------------------------------------
@@ -176,26 +176,26 @@ void BLASTER_EnableInterrupt(
     void)
 
 {
-   int Irq;
-   int mask;
+    int Irq;
+    int mask;
 
-   DISABLE_INTERRUPTS();
-   // Unmask system interrupt
-   Irq = BLASTER_Config.Interrupt;
-   if (Irq < 8)
-   {
-      mask = inp(0x21) & ~(1 << Irq);
-      outp(0x21, mask);
-   }
-   else
-   {
-      mask = inp(0xA1) & ~(1 << (Irq - 8));
-      outp(0xA1, mask);
+    DISABLE_INTERRUPTS();
+    // Unmask system interrupt
+    Irq = BLASTER_Config.Interrupt;
+    if (Irq < 8)
+    {
+        mask = inp(0x21) & ~(1 << Irq);
+        outp(0x21, mask);
+    }
+    else
+    {
+        mask = inp(0xA1) & ~(1 << (Irq - 8));
+        outp(0xA1, mask);
 
-      mask = inp(0x21) & ~(1 << 2);
-      outp(0x21, mask);
-   }
-   ENABLE_INTERRUPTS();
+        mask = inp(0x21) & ~(1 << 2);
+        outp(0x21, mask);
+    }
+    ENABLE_INTERRUPTS();
 }
 
 /*---------------------------------------------------------------------
@@ -208,29 +208,29 @@ void BLASTER_DisableInterrupt(
     void)
 
 {
-   int Irq;
-   int mask;
+    int Irq;
+    int mask;
 
-   DISABLE_INTERRUPTS();
-   // Restore interrupt mask
-   Irq = BLASTER_Config.Interrupt;
-   if (Irq < 8)
-   {
-      mask = inp(0x21) & ~(1 << Irq);
-      mask |= BLASTER_IntController1Mask & (1 << Irq);
-      outp(0x21, mask);
-   }
-   else
-   {
-      mask = inp(0x21) & ~(1 << 2);
-      mask |= BLASTER_IntController1Mask & (1 << 2);
-      outp(0x21, mask);
+    DISABLE_INTERRUPTS();
+    // Restore interrupt mask
+    Irq = BLASTER_Config.Interrupt;
+    if (Irq < 8)
+    {
+        mask = inp(0x21) & ~(1 << Irq);
+        mask |= BLASTER_IntController1Mask & (1 << Irq);
+        outp(0x21, mask);
+    }
+    else
+    {
+        mask = inp(0x21) & ~(1 << 2);
+        mask |= BLASTER_IntController1Mask & (1 << 2);
+        outp(0x21, mask);
 
-      mask = inp(0xA1) & ~(1 << (Irq - 8));
-      mask |= BLASTER_IntController2Mask & (1 << (Irq - 8));
-      outp(0xA1, mask);
-   }
-   ENABLE_INTERRUPTS();
+        mask = inp(0xA1) & ~(1 << (Irq - 8));
+        mask |= BLASTER_IntController2Mask & (1 << (Irq - 8));
+        outp(0xA1, mask);
+    }
+    ENABLE_INTERRUPTS();
 }
 
 /*---------------------------------------------------------------------
@@ -244,67 +244,67 @@ void interrupt far BLASTER_ServiceInterrupt(
     void)
 
 {
-   int status;
+    int status;
 
-   // Acknowledge interrupt
-   // Check if this is this an SB16 or newer
-   if (BLASTER_Version >= DSP_Version4xx)
-   {
-      outp(BLASTER_Config.Address + BLASTER_MixerAddressPort,
-           MIXER_DSP4xxISR_Ack);
+    // Acknowledge interrupt
+    // Check if this is this an SB16 or newer
+    if (BLASTER_Version >= DSP_Version4xx)
+    {
+        outp(BLASTER_Config.Address + BLASTER_MixerAddressPort,
+             MIXER_DSP4xxISR_Ack);
 
-      status = inp(BLASTER_Config.Address + BLASTER_MixerDataPort);
+        status = inp(BLASTER_Config.Address + BLASTER_MixerDataPort);
 
-      // Check if a 16-bit DMA interrupt occurred
-      if (status & MIXER_16BITDMA_INT)
-      {
-         // Acknowledge 16-bit transfer interrupt
-         inp(BLASTER_Config.Address + BLASTER_16BitDMAAck);
-      }
-      else if (status & MIXER_8BITDMA_INT)
-      {
-         inp(BLASTER_Config.Address + BLASTER_DataAvailablePort);
-      }
-      else
-      {
-         // Wasn't our interrupt.  Call the old one.
-         BLASTER_OldInt();
-         return;
-      }
-   }
-   else
-   {
-      // Older card - can't detect if an interrupt occurred.
-      inp(BLASTER_Config.Address + BLASTER_DataAvailablePort);
-   }
+        // Check if a 16-bit DMA interrupt occurred
+        if (status & MIXER_16BITDMA_INT)
+        {
+            // Acknowledge 16-bit transfer interrupt
+            inp(BLASTER_Config.Address + BLASTER_16BitDMAAck);
+        }
+        else if (status & MIXER_8BITDMA_INT)
+        {
+            inp(BLASTER_Config.Address + BLASTER_DataAvailablePort);
+        }
+        else
+        {
+            // Wasn't our interrupt.  Call the old one.
+            BLASTER_OldInt();
+            return;
+        }
+    }
+    else
+    {
+        // Older card - can't detect if an interrupt occurred.
+        inp(BLASTER_Config.Address + BLASTER_DataAvailablePort);
+    }
 
-   // Keep track of current buffer
-   BLASTER_CurrentDMABuffer += BLASTER_TransferLength;
+    // Keep track of current buffer
+    BLASTER_CurrentDMABuffer += BLASTER_TransferLength;
 
-   if (BLASTER_CurrentDMABuffer >= BLASTER_DMABufferEnd)
-   {
-      BLASTER_CurrentDMABuffer = BLASTER_DMABuffer;
-   }
+    if (BLASTER_CurrentDMABuffer >= BLASTER_DMABufferEnd)
+    {
+        BLASTER_CurrentDMABuffer = BLASTER_DMABuffer;
+    }
 
-   // Continue playback on cards without autoinit mode
-   if (BLASTER_Version < DSP_Version2xx)
-   {
-      BLASTER_DSP1xx_BeginPlayback(BLASTER_TransferLength);
-   }
+    // Continue playback on cards without autoinit mode
+    if (BLASTER_Version < DSP_Version2xx)
+    {
+        BLASTER_DSP1xx_BeginPlayback(BLASTER_TransferLength);
+    }
 
-   // Call the caller's callback function
-   if (BLASTER_CallBack != NULL)
-   {
-      BLASTER_CallBack();
-   }
+    // Call the caller's callback function
+    if (BLASTER_CallBack != NULL)
+    {
+        BLASTER_CallBack();
+    }
 
-   // send EOI to Interrupt Controller
-   if (BLASTER_Config.Interrupt > 7)
-   {
-      outp(0xA0, 0x20);
-   }
+    // send EOI to Interrupt Controller
+    if (BLASTER_Config.Interrupt > 7)
+    {
+        outp(0xA0, 0x20);
+    }
 
-   outp(0x20, 0x20);
+    outp(0x20, 0x20);
 }
 
 /*---------------------------------------------------------------------
@@ -317,29 +317,29 @@ int BLASTER_WriteDSP(
     unsigned data)
 
 {
-   int port;
-   unsigned count;
-   int status;
+    int port;
+    unsigned count;
+    int status;
 
-   port = BLASTER_Config.Address + BLASTER_WritePort;
-   status = BLASTER_CardNotReady;
-   count = 0xFFFF;
+    port = BLASTER_Config.Address + BLASTER_WritePort;
+    status = BLASTER_CardNotReady;
+    count = 0xFFFF;
 
-   do
-   {
-      if ((inp(port) & 0x80) == 0)
-      {
-         outp(port, data);
-         status = BLASTER_Ok;
-         break;
-      }
+    do
+    {
+        if ((inp(port) & 0x80) == 0)
+        {
+            outp(port, data);
+            status = BLASTER_Ok;
+            break;
+        }
 
-      count--;
-   } while (count > 0);
+        count--;
+    } while (count > 0);
 
-   BLASTER_SetErrorCode(status);
+    BLASTER_SetErrorCode(status);
 
-   return (status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -352,31 +352,31 @@ int BLASTER_ReadDSP(
     void)
 
 {
-   int port;
-   unsigned count;
-   int status;
+    int port;
+    unsigned count;
+    int status;
 
-   port = BLASTER_Config.Address + BLASTER_DataAvailablePort;
-   status = BLASTER_Error;
-   count = 0xFFFF;
+    port = BLASTER_Config.Address + BLASTER_DataAvailablePort;
+    status = BLASTER_Error;
+    count = 0xFFFF;
 
-   do
-   {
-      if (inp(port) & 0x80)
-      {
-         status = inp(BLASTER_Config.Address + BLASTER_ReadPort);
-         break;
-      }
+    do
+    {
+        if (inp(port) & 0x80)
+        {
+            status = inp(BLASTER_Config.Address + BLASTER_ReadPort);
+            break;
+        }
 
-      count--;
-   } while (count > 0);
+        count--;
+    } while (count > 0);
 
-   if (status == BLASTER_Error)
-   {
-      BLASTER_SetErrorCode(BLASTER_CardNotReady);
-   }
+    if (status == BLASTER_Error)
+    {
+        BLASTER_SetErrorCode(BLASTER_CardNotReady);
+    }
 
-   return (status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -390,53 +390,53 @@ int BLASTER_ResetDSP(
     void)
 
 {
-   int count;
-   int port;
-   int status;
+    int count;
+    int port;
+    int status;
 
-   port = BLASTER_Config.Address + BLASTER_ResetPort;
+    port = BLASTER_Config.Address + BLASTER_ResetPort;
 
-   status = BLASTER_CardNotReady;
+    status = BLASTER_CardNotReady;
 
-   outp(port, 1);
+    outp(port, 1);
 
-   /* What the hell am I doing here?
-      count = 100;
+    /* What the hell am I doing here?
+       count = 100;
 
-      do
-         {
-         if ( inp( port ) == 255 )
-            {
+       do
+          {
+          if ( inp( port ) == 255 )
+             {
+             break;
+             }
+
+          count--;
+          }
+       while( count > 0 );
+    */
+
+    count = 0x100;
+    do
+    {
+        count--;
+    } while (count > 0);
+
+    outp(port, 0);
+
+    count = 100;
+
+    do
+    {
+        if (BLASTER_ReadDSP() == BLASTER_Ready)
+        {
+            status = BLASTER_Ok;
             break;
-            }
+        }
 
-         count--;
-         }
-      while( count > 0 );
-   */
-
-   count = 0x100;
-   do
-   {
-      count--;
-   } while (count > 0);
-
-   outp(port, 0);
-
-   count = 100;
-
-   do
-   {
-      if (BLASTER_ReadDSP() == BLASTER_Ready)
-      {
-         status = BLASTER_Ok;
-         break;
-      }
-
-      count--;
-   } while (count > 0);
-   BLASTER_SetErrorCode(status);
-   return (status);
+        count--;
+    } while (count > 0);
+    BLASTER_SetErrorCode(status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -449,24 +449,24 @@ int BLASTER_GetDSPVersion(
     void)
 
 {
-   int MajorVersion;
-   int MinorVersion;
-   int version;
+    int MajorVersion;
+    int MinorVersion;
+    int version;
 
-   BLASTER_WriteDSP(DSP_GetVersion);
+    BLASTER_WriteDSP(DSP_GetVersion);
 
-   MajorVersion = BLASTER_ReadDSP();
-   MinorVersion = BLASTER_ReadDSP();
+    MajorVersion = BLASTER_ReadDSP();
+    MinorVersion = BLASTER_ReadDSP();
 
-   if ((MajorVersion == BLASTER_Error) ||
-       (MinorVersion == BLASTER_Error))
-   {
-      return (BLASTER_Error);
-   }
+    if ((MajorVersion == BLASTER_Error) ||
+        (MinorVersion == BLASTER_Error))
+    {
+        return (BLASTER_Error);
+    }
 
-   version = (MajorVersion << 8) + MinorVersion;
+    version = (MajorVersion << 8) + MinorVersion;
 
-   return (version);
+    return (version);
 }
 
 /*---------------------------------------------------------------------
@@ -479,7 +479,7 @@ void BLASTER_SpeakerOn(
     void)
 
 {
-   BLASTER_WriteDSP(DSP_SpeakerOn);
+    BLASTER_WriteDSP(DSP_SpeakerOn);
 }
 
 /*---------------------------------------------------------------------
@@ -492,7 +492,7 @@ void BLASTER_SpeakerOff(
     void)
 
 {
-   BLASTER_WriteDSP(DSP_SpeakerOff);
+    BLASTER_WriteDSP(DSP_SpeakerOff);
 }
 
 /*---------------------------------------------------------------------
@@ -506,66 +506,66 @@ void BLASTER_SetPlaybackRate(
     unsigned rate)
 
 {
-   int LoByte;
-   int HiByte;
-   CARD_CAPABILITY *ptr;
+    int LoByte;
+    int HiByte;
+    CARD_CAPABILITY *ptr;
 
-   ptr = &BLASTER_CardConfig[BLASTER_Config.Type];
+    ptr = &BLASTER_CardConfig[BLASTER_Config.Type];
 
-   if (BLASTER_Version < DSP_Version4xx)
-   {
-      int timeconstant;
-      long ActualRate;
+    if (BLASTER_Version < DSP_Version4xx)
+    {
+        int timeconstant;
+        long ActualRate;
 
-      // Send sampling rate as time constant for older Sound
-      // Blaster compatible cards.
+        // Send sampling rate as time constant for older Sound
+        // Blaster compatible cards.
 
-      ActualRate = rate * BLASTER_SamplePacketSize;
-      if (ActualRate < ptr->MinSamplingRate)
-      {
-         rate = ptr->MinSamplingRate / BLASTER_SamplePacketSize;
-      }
+        ActualRate = rate * BLASTER_SamplePacketSize;
+        if (ActualRate < ptr->MinSamplingRate)
+        {
+            rate = ptr->MinSamplingRate / BLASTER_SamplePacketSize;
+        }
 
-      if (ActualRate > ptr->MaxSamplingRate)
-      {
-         rate = ptr->MaxSamplingRate / BLASTER_SamplePacketSize;
-      }
+        if (ActualRate > ptr->MaxSamplingRate)
+        {
+            rate = ptr->MaxSamplingRate / BLASTER_SamplePacketSize;
+        }
 
-      timeconstant = (int)CalcTimeConstant(rate, BLASTER_SamplePacketSize);
+        timeconstant = (int)CalcTimeConstant(rate, BLASTER_SamplePacketSize);
 
-      // Keep track of what the actual rate is
-      BLASTER_SampleRate = (unsigned)CalcSamplingRate(timeconstant);
-      BLASTER_SampleRate /= BLASTER_SamplePacketSize;
+        // Keep track of what the actual rate is
+        BLASTER_SampleRate = (unsigned)CalcSamplingRate(timeconstant);
+        BLASTER_SampleRate /= BLASTER_SamplePacketSize;
 
-      BLASTER_WriteDSP(DSP_SetTimeConstant);
-      BLASTER_WriteDSP(timeconstant);
-      return;
-   }
-   else
-   {
-      // Send literal sampling rate for cards with DSP version
-      // 4.xx (Sound Blaster 16)
+        BLASTER_WriteDSP(DSP_SetTimeConstant);
+        BLASTER_WriteDSP(timeconstant);
+        return;
+    }
+    else
+    {
+        // Send literal sampling rate for cards with DSP version
+        // 4.xx (Sound Blaster 16)
 
-      BLASTER_SampleRate = rate;
+        BLASTER_SampleRate = rate;
 
-      if (BLASTER_SampleRate < ptr->MinSamplingRate)
-      {
-         BLASTER_SampleRate = ptr->MinSamplingRate;
-      }
+        if (BLASTER_SampleRate < ptr->MinSamplingRate)
+        {
+            BLASTER_SampleRate = ptr->MinSamplingRate;
+        }
 
-      if (BLASTER_SampleRate > ptr->MaxSamplingRate)
-      {
-         BLASTER_SampleRate = ptr->MaxSamplingRate;
-      }
+        if (BLASTER_SampleRate > ptr->MaxSamplingRate)
+        {
+            BLASTER_SampleRate = ptr->MaxSamplingRate;
+        }
 
-      HiByte = hibyte(BLASTER_SampleRate);
-      LoByte = lobyte(BLASTER_SampleRate);
+        HiByte = hibyte(BLASTER_SampleRate);
+        LoByte = lobyte(BLASTER_SampleRate);
 
-      // Set playback rate
-      BLASTER_WriteDSP(DSP_Set_DA_Rate);
-      BLASTER_WriteDSP(HiByte);
-      BLASTER_WriteDSP(LoByte);
-   }
+        // Set playback rate
+        BLASTER_WriteDSP(DSP_Set_DA_Rate);
+        BLASTER_WriteDSP(HiByte);
+        BLASTER_WriteDSP(LoByte);
+    }
 }
 
 /*---------------------------------------------------------------------
@@ -579,7 +579,7 @@ unsigned BLASTER_GetPlaybackRate(
     void)
 
 {
-   return (BLASTER_SampleRate);
+    return (BLASTER_SampleRate);
 }
 
 /*---------------------------------------------------------------------
@@ -592,57 +592,57 @@ int BLASTER_SetMixMode(
     int mode)
 
 {
-   int port;
-   int data;
-   int CardType;
+    int port;
+    int data;
+    int CardType;
 
-   CardType = BLASTER_Config.Type;
+    CardType = BLASTER_Config.Type;
 
-   mode &= BLASTER_MaxMixMode;
+    mode &= BLASTER_MaxMixMode;
 
-   if (!(BLASTER_CardConfig[CardType].MaxMixMode & STEREO))
-   {
-      mode &= ~STEREO;
-   }
+    if (!(BLASTER_CardConfig[CardType].MaxMixMode & STEREO))
+    {
+        mode &= ~STEREO;
+    }
 
-   if (!(BLASTER_CardConfig[CardType].MaxMixMode & SIXTEEN_BIT))
-   {
-      mode &= ~SIXTEEN_BIT;
-   }
+    if (!(BLASTER_CardConfig[CardType].MaxMixMode & SIXTEEN_BIT))
+    {
+        mode &= ~SIXTEEN_BIT;
+    }
 
-   BLASTER_MixMode = mode;
-   BLASTER_SamplePacketSize = BLASTER_SampleSize[mode];
+    BLASTER_MixMode = mode;
+    BLASTER_SamplePacketSize = BLASTER_SampleSize[mode];
 
-   // For the Sound Blaster Pro, we have to set the mixer chip
-   // to play mono or stereo samples.
+    // For the Sound Blaster Pro, we have to set the mixer chip
+    // to play mono or stereo samples.
 
-   if ((CardType == SBPro) || (CardType == SBPro2))
-   {
-      port = BLASTER_Config.Address + BLASTER_MixerAddressPort;
-      outp(port, MIXER_SBProOutputSetting);
+    if ((CardType == SBPro) || (CardType == SBPro2))
+    {
+        port = BLASTER_Config.Address + BLASTER_MixerAddressPort;
+        outp(port, MIXER_SBProOutputSetting);
 
-      port = BLASTER_Config.Address + BLASTER_MixerDataPort;
+        port = BLASTER_Config.Address + BLASTER_MixerDataPort;
 
-      // Get current mode
-      data = inp(port);
+        // Get current mode
+        data = inp(port);
 
-      // set stereo mode bit
-      if (mode & STEREO)
-      {
-         data |= MIXER_SBProStereoFlag;
-      }
-      else
-      {
-         data &= ~MIXER_SBProStereoFlag;
-      }
+        // set stereo mode bit
+        if (mode & STEREO)
+        {
+            data |= MIXER_SBProStereoFlag;
+        }
+        else
+        {
+            data &= ~MIXER_SBProStereoFlag;
+        }
 
-      // set the mode
-      outp(port, data);
+        // set the mode
+        outp(port, data);
 
-      BLASTER_SetPlaybackRate(BLASTER_SampleRate);
-   }
+        BLASTER_SetPlaybackRate(BLASTER_SampleRate);
+    }
 
-   return (mode);
+    return (mode);
 }
 
 /*---------------------------------------------------------------------
@@ -655,26 +655,26 @@ void BLASTER_StopPlayback(
     void)
 
 {
-   int DmaChannel;
+    int DmaChannel;
 
-   // Don't allow anymore interrupts
-   BLASTER_DisableInterrupt();
+    // Don't allow anymore interrupts
+    BLASTER_DisableInterrupt();
 
-   if (BLASTER_HaltTransferCommand == DSP_Reset)
-   {
-      BLASTER_ResetDSP();
-   }
-   else
-   {
-      BLASTER_WriteDSP(BLASTER_HaltTransferCommand);
-   }
+    if (BLASTER_HaltTransferCommand == DSP_Reset)
+    {
+        BLASTER_ResetDSP();
+    }
+    else
+    {
+        BLASTER_WriteDSP(BLASTER_HaltTransferCommand);
+    }
 
-   // Turn off speaker
-   BLASTER_SpeakerOff();
+    // Turn off speaker
+    BLASTER_SpeakerOff();
 
-   BLASTER_SoundPlaying = FALSE;
+    BLASTER_SoundPlaying = FALSE;
 
-   BLASTER_DMABuffer = NULL;
+    BLASTER_DMABuffer = NULL;
 }
 
 /*---------------------------------------------------------------------
@@ -688,37 +688,37 @@ int BLASTER_SetupDMABuffer(
     int BufferSize)
 
 {
-   int DmaChannel;
-   int DmaStatus;
+    int DmaChannel;
+    int DmaStatus;
 
-   if (BLASTER_MixMode & SIXTEEN_BIT)
-   {
-      DmaChannel = BLASTER_Config.Dma16;
-   }
-   else
-   {
-      DmaChannel = BLASTER_Config.Dma8;
-   }
+    if (BLASTER_MixMode & SIXTEEN_BIT)
+    {
+        DmaChannel = BLASTER_Config.Dma16;
+    }
+    else
+    {
+        DmaChannel = BLASTER_Config.Dma8;
+    }
 
-   if (DmaChannel == UNDEFINED)
-   {
-      BLASTER_SetErrorCode(BLASTER_DMANotSet);
-      return (BLASTER_Error);
-   }
+    if (DmaChannel == UNDEFINED)
+    {
+        BLASTER_SetErrorCode(BLASTER_DMANotSet);
+        return (BLASTER_Error);
+    }
 
-   DmaStatus = DMA_SetupTransfer(DmaChannel, BufferPtr, BufferSize);
-   if (DmaStatus == DMA_Error)
-   {
-      BLASTER_SetErrorCode(BLASTER_DmaError);
-      return (BLASTER_Error);
-   }
+    DmaStatus = DMA_SetupTransfer(DmaChannel, BufferPtr, BufferSize);
+    if (DmaStatus == DMA_Error)
+    {
+        BLASTER_SetErrorCode(BLASTER_DmaError);
+        return (BLASTER_Error);
+    }
 
-   BLASTER_DMABuffer = BufferPtr;
-   BLASTER_CurrentDMABuffer = BufferPtr;
-   BLASTER_TotalDMABufferSize = BufferSize;
-   BLASTER_DMABufferEnd = BufferPtr + BufferSize;
+    BLASTER_DMABuffer = BufferPtr;
+    BLASTER_CurrentDMABuffer = BufferPtr;
+    BLASTER_TotalDMABufferSize = BufferSize;
+    BLASTER_DMABufferEnd = BufferPtr + BufferSize;
 
-   return (BLASTER_Ok);
+    return (BLASTER_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -731,47 +731,47 @@ int BLASTER_GetCurrentPos(
     void)
 
 {
-   char *CurrentAddr;
-   int DmaChannel;
-   int offset;
+    char *CurrentAddr;
+    int DmaChannel;
+    int offset;
 
-   if (!BLASTER_SoundPlaying)
-   {
-      BLASTER_SetErrorCode(BLASTER_NoSoundPlaying);
-      return (BLASTER_Error);
-   }
+    if (!BLASTER_SoundPlaying)
+    {
+        BLASTER_SetErrorCode(BLASTER_NoSoundPlaying);
+        return (BLASTER_Error);
+    }
 
-   if (BLASTER_MixMode & SIXTEEN_BIT)
-   {
-      DmaChannel = BLASTER_Config.Dma16;
-   }
-   else
-   {
-      DmaChannel = BLASTER_Config.Dma8;
-   }
+    if (BLASTER_MixMode & SIXTEEN_BIT)
+    {
+        DmaChannel = BLASTER_Config.Dma16;
+    }
+    else
+    {
+        DmaChannel = BLASTER_Config.Dma8;
+    }
 
-   if (DmaChannel == UNDEFINED)
-   {
-      BLASTER_SetErrorCode(BLASTER_DMANotSet);
-      return (BLASTER_Error);
-   }
+    if (DmaChannel == UNDEFINED)
+    {
+        BLASTER_SetErrorCode(BLASTER_DMANotSet);
+        return (BLASTER_Error);
+    }
 
-   CurrentAddr = DMA_GetCurrentPos(DmaChannel);
+    CurrentAddr = DMA_GetCurrentPos(DmaChannel);
 
-   offset = (int)(((char huge *)CurrentAddr) -
-                  ((char huge *)BLASTER_CurrentDMABuffer));
+    offset = (int)(((char huge *)CurrentAddr) -
+                   ((char huge *)BLASTER_CurrentDMABuffer));
 
-   if (BLASTER_MixMode & SIXTEEN_BIT)
-   {
-      offset >>= 1;
-   }
+    if (BLASTER_MixMode & SIXTEEN_BIT)
+    {
+        offset >>= 1;
+    }
 
-   if (BLASTER_MixMode & STEREO)
-   {
-      offset >>= 1;
-   }
+    if (BLASTER_MixMode & STEREO)
+    {
+        offset >>= 1;
+    }
 
-   return (offset);
+    return (offset);
 }
 
 /*---------------------------------------------------------------------
@@ -785,24 +785,24 @@ int BLASTER_DSP1xx_BeginPlayback(
     int length)
 
 {
-   int SampleLength;
-   int LoByte;
-   int HiByte;
+    int SampleLength;
+    int LoByte;
+    int HiByte;
 
-   SampleLength = length - 1;
-   HiByte = hibyte(SampleLength);
-   LoByte = lobyte(SampleLength);
+    SampleLength = length - 1;
+    HiByte = hibyte(SampleLength);
+    LoByte = lobyte(SampleLength);
 
-   // Program DSP to play sound
-   BLASTER_WriteDSP(DSP_Old8BitDAC);
-   BLASTER_WriteDSP(LoByte);
-   BLASTER_WriteDSP(HiByte);
+    // Program DSP to play sound
+    BLASTER_WriteDSP(DSP_Old8BitDAC);
+    BLASTER_WriteDSP(LoByte);
+    BLASTER_WriteDSP(HiByte);
 
-   BLASTER_HaltTransferCommand = DSP_Halt8bitTransfer;
+    BLASTER_HaltTransferCommand = DSP_Halt8bitTransfer;
 
-   BLASTER_SoundPlaying = TRUE;
+    BLASTER_SoundPlaying = TRUE;
 
-   return (BLASTER_Ok);
+    return (BLASTER_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -816,33 +816,33 @@ int BLASTER_DSP2xx_BeginPlayback(
     int length)
 
 {
-   int SampleLength;
-   int LoByte;
-   int HiByte;
+    int SampleLength;
+    int LoByte;
+    int HiByte;
 
-   SampleLength = length - 1;
-   HiByte = hibyte(SampleLength);
-   LoByte = lobyte(SampleLength);
+    SampleLength = length - 1;
+    HiByte = hibyte(SampleLength);
+    LoByte = lobyte(SampleLength);
 
-   BLASTER_WriteDSP(DSP_SetBlockLength);
-   BLASTER_WriteDSP(LoByte);
-   BLASTER_WriteDSP(HiByte);
+    BLASTER_WriteDSP(DSP_SetBlockLength);
+    BLASTER_WriteDSP(LoByte);
+    BLASTER_WriteDSP(HiByte);
 
-   if ((BLASTER_Version >= DSP_Version201) && (DSP_MaxNormalRate <
-                                               (BLASTER_SampleRate * BLASTER_SamplePacketSize)))
-   {
-      BLASTER_WriteDSP(DSP_8BitHighSpeedAutoInitMode);
-      BLASTER_HaltTransferCommand = DSP_Reset;
-   }
-   else
-   {
-      BLASTER_WriteDSP(DSP_8BitAutoInitMode);
-      BLASTER_HaltTransferCommand = DSP_Halt8bitTransfer;
-   }
+    if ((BLASTER_Version >= DSP_Version201) && (DSP_MaxNormalRate <
+                                                (BLASTER_SampleRate * BLASTER_SamplePacketSize)))
+    {
+        BLASTER_WriteDSP(DSP_8BitHighSpeedAutoInitMode);
+        BLASTER_HaltTransferCommand = DSP_Reset;
+    }
+    else
+    {
+        BLASTER_WriteDSP(DSP_8BitAutoInitMode);
+        BLASTER_HaltTransferCommand = DSP_Halt8bitTransfer;
+    }
 
-   BLASTER_SoundPlaying = TRUE;
+    BLASTER_SoundPlaying = TRUE;
 
-   return (BLASTER_Ok);
+    return (BLASTER_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -856,53 +856,53 @@ int BLASTER_DSP4xx_BeginPlayback(
     int length)
 
 {
-   int TransferCommand;
-   int TransferMode;
-   int SampleLength;
-   int LoByte;
-   int HiByte;
+    int TransferCommand;
+    int TransferMode;
+    int SampleLength;
+    int LoByte;
+    int HiByte;
 
-   if (BLASTER_MixMode & SIXTEEN_BIT)
-   {
-      TransferCommand = DSP_16BitDAC;
-      SampleLength = (length / 2) - 1;
-      BLASTER_HaltTransferCommand = DSP_Halt16bitTransfer;
-      if (BLASTER_MixMode & STEREO)
-      {
-         TransferMode = DSP_SignedStereoData;
-      }
-      else
-      {
-         TransferMode = DSP_SignedMonoData;
-      }
-   }
-   else
-   {
-      TransferCommand = DSP_8BitDAC;
-      SampleLength = length - 1;
-      BLASTER_HaltTransferCommand = DSP_Halt8bitTransfer;
-      if (BLASTER_MixMode & STEREO)
-      {
-         TransferMode = DSP_UnsignedStereoData;
-      }
-      else
-      {
-         TransferMode = DSP_UnsignedMonoData;
-      }
-   }
+    if (BLASTER_MixMode & SIXTEEN_BIT)
+    {
+        TransferCommand = DSP_16BitDAC;
+        SampleLength = (length / 2) - 1;
+        BLASTER_HaltTransferCommand = DSP_Halt16bitTransfer;
+        if (BLASTER_MixMode & STEREO)
+        {
+            TransferMode = DSP_SignedStereoData;
+        }
+        else
+        {
+            TransferMode = DSP_SignedMonoData;
+        }
+    }
+    else
+    {
+        TransferCommand = DSP_8BitDAC;
+        SampleLength = length - 1;
+        BLASTER_HaltTransferCommand = DSP_Halt8bitTransfer;
+        if (BLASTER_MixMode & STEREO)
+        {
+            TransferMode = DSP_UnsignedStereoData;
+        }
+        else
+        {
+            TransferMode = DSP_UnsignedMonoData;
+        }
+    }
 
-   HiByte = hibyte(SampleLength);
-   LoByte = lobyte(SampleLength);
+    HiByte = hibyte(SampleLength);
+    LoByte = lobyte(SampleLength);
 
-   // Program DSP to play sound
-   BLASTER_WriteDSP(TransferCommand);
-   BLASTER_WriteDSP(TransferMode);
-   BLASTER_WriteDSP(LoByte);
-   BLASTER_WriteDSP(HiByte);
+    // Program DSP to play sound
+    BLASTER_WriteDSP(TransferCommand);
+    BLASTER_WriteDSP(TransferMode);
+    BLASTER_WriteDSP(LoByte);
+    BLASTER_WriteDSP(HiByte);
 
-   BLASTER_SoundPlaying = TRUE;
+    BLASTER_SoundPlaying = TRUE;
 
-   return (BLASTER_Ok);
+    return (BLASTER_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -920,48 +920,48 @@ int BLASTER_BeginBufferedPlayback(
     void (*CallBackFunc)(void))
 
 {
-   int DmaStatus;
-   int TransferLength;
+    int DmaStatus;
+    int TransferLength;
 
-   if (BLASTER_SoundPlaying)
-   {
-      BLASTER_StopPlayback();
-   }
+    if (BLASTER_SoundPlaying)
+    {
+        BLASTER_StopPlayback();
+    }
 
-   DmaStatus = BLASTER_SetupDMABuffer(BufferStart, BufferSize);
-   if (DmaStatus == BLASTER_Error)
-   {
-      return (BLASTER_Error);
-   }
+    DmaStatus = BLASTER_SetupDMABuffer(BufferStart, BufferSize);
+    if (DmaStatus == BLASTER_Error)
+    {
+        return (BLASTER_Error);
+    }
 
-   BLASTER_SetMixMode(MixMode);
-   BLASTER_SetPlaybackRate(SampleRate);
+    BLASTER_SetMixMode(MixMode);
+    BLASTER_SetPlaybackRate(SampleRate);
 
-   BLASTER_SetCallBack(CallBackFunc);
+    BLASTER_SetCallBack(CallBackFunc);
 
-   BLASTER_EnableInterrupt();
+    BLASTER_EnableInterrupt();
 
-   // Turn on speaker
-   BLASTER_SpeakerOn();
+    // Turn on speaker
+    BLASTER_SpeakerOn();
 
-   TransferLength = BufferSize / NumDivisions;
-   BLASTER_TransferLength = TransferLength;
+    TransferLength = BufferSize / NumDivisions;
+    BLASTER_TransferLength = TransferLength;
 
-   //  Program the sound card to start the transfer.
-   if (BLASTER_Version < DSP_Version2xx)
-   {
-      BLASTER_DSP1xx_BeginPlayback(TransferLength);
-   }
-   else if (BLASTER_Version < DSP_Version4xx)
-   {
-      BLASTER_DSP2xx_BeginPlayback(TransferLength);
-   }
-   else
-   {
-      BLASTER_DSP4xx_BeginPlayback(TransferLength);
-   }
+    //  Program the sound card to start the transfer.
+    if (BLASTER_Version < DSP_Version2xx)
+    {
+        BLASTER_DSP1xx_BeginPlayback(TransferLength);
+    }
+    else if (BLASTER_Version < DSP_Version4xx)
+    {
+        BLASTER_DSP2xx_BeginPlayback(TransferLength);
+    }
+    else
+    {
+        BLASTER_DSP4xx_BeginPlayback(TransferLength);
+    }
 
-   return (BLASTER_Ok);
+    return (BLASTER_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -975,8 +975,8 @@ void BLASTER_WriteMixer(
     int data)
 
 {
-   outp(BLASTER_MixerAddress + BLASTER_MixerAddressPort, reg);
-   outp(BLASTER_MixerAddress + BLASTER_MixerDataPort, data);
+    outp(BLASTER_MixerAddress + BLASTER_MixerAddressPort, reg);
+    outp(BLASTER_MixerAddress + BLASTER_MixerDataPort, data);
 }
 
 /*---------------------------------------------------------------------
@@ -989,11 +989,11 @@ int BLASTER_ReadMixer(
     int reg)
 
 {
-   int data;
+    int data;
 
-   outp(BLASTER_MixerAddress + BLASTER_MixerAddressPort, reg);
-   data = inp(BLASTER_MixerAddress + BLASTER_MixerDataPort);
-   return (data);
+    outp(BLASTER_MixerAddress + BLASTER_MixerAddressPort, reg);
+    data = inp(BLASTER_MixerAddress + BLASTER_MixerDataPort);
+    return (data);
 }
 
 /*---------------------------------------------------------------------
@@ -1007,32 +1007,32 @@ int BLASTER_GetVoiceVolume(
     void)
 
 {
-   int volume;
-   int left;
-   int right;
+    int volume;
+    int left;
+    int right;
 
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      left = BLASTER_ReadMixer(MIXER_SBProVoice);
-      right = (left & 0x0f) << 4;
-      left &= 0xf0;
-      volume = (left + right) / 2;
-      break;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        left = BLASTER_ReadMixer(MIXER_SBProVoice);
+        right = (left & 0x0f) << 4;
+        left &= 0xf0;
+        volume = (left + right) / 2;
+        break;
 
-   case SB16:
-      left = BLASTER_ReadMixer(MIXER_SB16VoiceLeft);
-      right = BLASTER_ReadMixer(MIXER_SB16VoiceRight);
-      volume = (left + right) / 2;
-      break;
+    case SB16:
+        left = BLASTER_ReadMixer(MIXER_SB16VoiceLeft);
+        right = BLASTER_ReadMixer(MIXER_SB16VoiceRight);
+        volume = (left + right) / 2;
+        break;
 
-   default:
-      BLASTER_SetErrorCode(BLASTER_NoMixer);
-      volume = BLASTER_Error;
-   }
+    default:
+        BLASTER_SetErrorCode(BLASTER_NoMixer);
+        volume = BLASTER_Error;
+    }
 
-   return (volume);
+    return (volume);
 }
 
 /*---------------------------------------------------------------------
@@ -1046,32 +1046,32 @@ int BLASTER_SetVoiceVolume(
     int volume)
 
 {
-   int data;
-   int status;
+    int data;
+    int status;
 
-   volume = min(255, volume);
-   volume = max(0, volume);
+    volume = min(255, volume);
+    volume = max(0, volume);
 
-   status = BLASTER_Ok;
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      data = (volume & 0xf0) + (volume >> 4);
-      BLASTER_WriteMixer(MIXER_SBProVoice, data);
-      break;
+    status = BLASTER_Ok;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        data = (volume & 0xf0) + (volume >> 4);
+        BLASTER_WriteMixer(MIXER_SBProVoice, data);
+        break;
 
-   case SB16:
-      BLASTER_WriteMixer(MIXER_SB16VoiceLeft, volume & 0xf8);
-      BLASTER_WriteMixer(MIXER_SB16VoiceRight, volume & 0xf8);
-      break;
+    case SB16:
+        BLASTER_WriteMixer(MIXER_SB16VoiceLeft, volume & 0xf8);
+        BLASTER_WriteMixer(MIXER_SB16VoiceRight, volume & 0xf8);
+        break;
 
-   default:
-      BLASTER_SetErrorCode(BLASTER_NoMixer);
-      status = BLASTER_Error;
-   }
+    default:
+        BLASTER_SetErrorCode(BLASTER_NoMixer);
+        status = BLASTER_Error;
+    }
 
-   return (status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -1085,32 +1085,32 @@ int BLASTER_GetMidiVolume(
     void)
 
 {
-   int volume;
-   int left;
-   int right;
+    int volume;
+    int left;
+    int right;
 
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      left = BLASTER_ReadMixer(MIXER_SBProMidi);
-      right = (left & 0x0f) << 4;
-      left &= 0xf0;
-      volume = (left + right) / 2;
-      break;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        left = BLASTER_ReadMixer(MIXER_SBProMidi);
+        right = (left & 0x0f) << 4;
+        left &= 0xf0;
+        volume = (left + right) / 2;
+        break;
 
-   case SB16:
-      left = BLASTER_ReadMixer(MIXER_SB16MidiLeft);
-      right = BLASTER_ReadMixer(MIXER_SB16MidiRight);
-      volume = (left + right) / 2;
-      break;
+    case SB16:
+        left = BLASTER_ReadMixer(MIXER_SB16MidiLeft);
+        right = BLASTER_ReadMixer(MIXER_SB16MidiRight);
+        volume = (left + right) / 2;
+        break;
 
-   default:
-      BLASTER_SetErrorCode(BLASTER_NoMixer);
-      volume = BLASTER_Error;
-   }
+    default:
+        BLASTER_SetErrorCode(BLASTER_NoMixer);
+        volume = BLASTER_Error;
+    }
 
-   return (volume);
+    return (volume);
 }
 
 /*---------------------------------------------------------------------
@@ -1124,32 +1124,32 @@ int BLASTER_SetMidiVolume(
     int volume)
 
 {
-   int data;
-   int status;
+    int data;
+    int status;
 
-   volume = min(255, volume);
-   volume = max(0, volume);
+    volume = min(255, volume);
+    volume = max(0, volume);
 
-   status = BLASTER_Ok;
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      data = (volume & 0xf0) + (volume >> 4);
-      BLASTER_WriteMixer(MIXER_SBProMidi, data);
-      break;
+    status = BLASTER_Ok;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        data = (volume & 0xf0) + (volume >> 4);
+        BLASTER_WriteMixer(MIXER_SBProMidi, data);
+        break;
 
-   case SB16:
-      BLASTER_WriteMixer(MIXER_SB16MidiLeft, volume & 0xf8);
-      BLASTER_WriteMixer(MIXER_SB16MidiRight, volume & 0xf8);
-      break;
+    case SB16:
+        BLASTER_WriteMixer(MIXER_SB16MidiLeft, volume & 0xf8);
+        BLASTER_WriteMixer(MIXER_SB16MidiRight, volume & 0xf8);
+        break;
 
-   default:
-      BLASTER_SetErrorCode(BLASTER_NoMixer);
-      status = BLASTER_Error;
-   }
+    default:
+        BLASTER_SetErrorCode(BLASTER_NoMixer);
+        status = BLASTER_Error;
+    }
 
-   return (status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -1162,27 +1162,27 @@ int BLASTER_CardHasMixer(
     void)
 
 {
-   if (BLASTER_MixerAddress == UNDEFINED)
-   {
-      BLASTER_CONFIG Config;
-      int ret;
-      ret = BLASTER_GetEnv(&Config);
-      if (ret == BLASTER_Ok)
-      {
-         BLASTER_MixerAddress = Config.Address;
-         BLASTER_MixerType = 0;
-         if (Config.Type >= SB || Config.Type <= SB16)
-         {
-            BLASTER_MixerType = Config.Type;
-         }
-      }
-   }
+    if (BLASTER_MixerAddress == UNDEFINED)
+    {
+        BLASTER_CONFIG Config;
+        int ret;
+        ret = BLASTER_GetEnv(&Config);
+        if (ret == BLASTER_Ok)
+        {
+            BLASTER_MixerAddress = Config.Address;
+            BLASTER_MixerType = 0;
+            if (Config.Type >= SB || Config.Type <= SB16)
+            {
+                BLASTER_MixerType = Config.Type;
+            }
+        }
+    }
 
-   if (BLASTER_MixerAddress != UNDEFINED)
-   {
-      return BLASTER_CardConfig[BLASTER_MixerType].HasMixer;
-   }
-   return FALSE;
+    if (BLASTER_MixerAddress != UNDEFINED)
+    {
+        return BLASTER_CardConfig[BLASTER_MixerType].HasMixer;
+    }
+    return FALSE;
 }
 
 /*---------------------------------------------------------------------
@@ -1196,98 +1196,98 @@ int BLASTER_GetEnv(
     BLASTER_CONFIG *Config)
 
 {
-   char *Blaster;
-   char parameter;
-   int err;
-   int ret;
+    char *Blaster;
+    char parameter;
+    int err;
+    int ret;
 
-   Config->Address = UNDEFINED;
-   Config->Type = UNDEFINED;
-   Config->Interrupt = UNDEFINED;
-   Config->Dma8 = UNDEFINED;
-   Config->Dma16 = UNDEFINED;
-   Config->Midi = UNDEFINED;
+    Config->Address = UNDEFINED;
+    Config->Type = UNDEFINED;
+    Config->Interrupt = UNDEFINED;
+    Config->Dma8 = UNDEFINED;
+    Config->Dma16 = UNDEFINED;
+    Config->Midi = UNDEFINED;
 
-   Blaster = getenv("BLASTER");
-   if (Blaster == NULL)
-   {
-      BLASTER_SetErrorCode(BLASTER_EnvNotFound);
-      return (BLASTER_Error);
-   }
+    Blaster = getenv("BLASTER");
+    if (Blaster == NULL)
+    {
+        BLASTER_SetErrorCode(BLASTER_EnvNotFound);
+        return (BLASTER_Error);
+    }
 
-   while (*Blaster != 0)
-   {
-      if (*Blaster == ' ')
-      {
-         Blaster++;
-         continue;
-      }
+    while (*Blaster != 0)
+    {
+        if (*Blaster == ' ')
+        {
+            Blaster++;
+            continue;
+        }
 
-      parameter = toupper(*Blaster);
-      Blaster++;
+        parameter = toupper(*Blaster);
+        Blaster++;
 
-      if (!isxdigit(*Blaster))
-      {
-         BLASTER_SetErrorCode(BLASTER_InvalidParameter);
-         return (BLASTER_Error);
-      }
+        if (!isxdigit(*Blaster))
+        {
+            BLASTER_SetErrorCode(BLASTER_InvalidParameter);
+            return (BLASTER_Error);
+        }
 
-      switch (parameter)
-      {
-      case BlasterEnv_Address:
-         sscanf(Blaster, "%x", &Config->Address);
-         break;
-      case BlasterEnv_Interrupt:
-         sscanf(Blaster, "%d", &Config->Interrupt);
-         break;
-      case BlasterEnv_8bitDma:
-         sscanf(Blaster, "%d", &Config->Dma8);
-         break;
-      case BlasterEnv_Type:
-         sscanf(Blaster, "%d", &Config->Type);
-         break;
-      case BlasterEnv_16bitDma:
-         sscanf(Blaster, "%d", &Config->Dma16);
-         break;
-      case BlasterEnv_Midi:
-         sscanf(Blaster, "%x", &Config->Midi);
-         break;
-      default:
-         BLASTER_SetErrorCode(BLASTER_InvalidParameter);
-         return (BLASTER_Error);
-      }
+        switch (parameter)
+        {
+        case BlasterEnv_Address:
+            sscanf(Blaster, "%x", &Config->Address);
+            break;
+        case BlasterEnv_Interrupt:
+            sscanf(Blaster, "%d", &Config->Interrupt);
+            break;
+        case BlasterEnv_8bitDma:
+            sscanf(Blaster, "%d", &Config->Dma8);
+            break;
+        case BlasterEnv_Type:
+            sscanf(Blaster, "%d", &Config->Type);
+            break;
+        case BlasterEnv_16bitDma:
+            sscanf(Blaster, "%d", &Config->Dma16);
+            break;
+        case BlasterEnv_Midi:
+            sscanf(Blaster, "%x", &Config->Midi);
+            break;
+        default:
+            BLASTER_SetErrorCode(BLASTER_InvalidParameter);
+            return (BLASTER_Error);
+        }
 
-      while (isxdigit(*Blaster))
-      {
-         Blaster++;
-      }
-   }
-   ret = BLASTER_Ok;
-   err = BLASTER_Ok;
-   if (Config->Type == UNDEFINED)
-   {
-      err = BLASTER_TypeNotSet;
-   }
-   if (Config->Dma8 == UNDEFINED)
-   {
-      err = BLASTER_DMANotSet;
-   }
-   if (Config->Interrupt == UNDEFINED)
-   {
-      err = BLASTER_InterruptNotSet;
-   }
-   if (Config->Address == UNDEFINED)
-   {
-      err = BLASTER_AddrNotSet;
-   }
+        while (isxdigit(*Blaster))
+        {
+            Blaster++;
+        }
+    }
+    ret = BLASTER_Ok;
+    err = BLASTER_Ok;
+    if (Config->Type == UNDEFINED)
+    {
+        err = BLASTER_TypeNotSet;
+    }
+    if (Config->Dma8 == UNDEFINED)
+    {
+        err = BLASTER_DMANotSet;
+    }
+    if (Config->Interrupt == UNDEFINED)
+    {
+        err = BLASTER_InterruptNotSet;
+    }
+    if (Config->Address == UNDEFINED)
+    {
+        err = BLASTER_AddrNotSet;
+    }
 
-   if (err != BLASTER_Ok)
-   {
-      ret = BLASTER_Error;
-      BLASTER_SetErrorCode(err);
-   }
+    if (err != BLASTER_Ok)
+    {
+        ret = BLASTER_Error;
+        BLASTER_SetErrorCode(err);
+    }
 
-   return (ret);
+    return (ret);
 }
 
 /*---------------------------------------------------------------------
@@ -1300,19 +1300,19 @@ int BLASTER_SetCardSettings(
     BLASTER_CONFIG *Config)
 
 {
-   if (BLASTER_Installed)
-   {
-      BLASTER_Shutdown();
-   }
+    if (BLASTER_Installed)
+    {
+        BLASTER_Shutdown();
+    }
 
-   BLASTER_Config.Address = Config->Address;
-   BLASTER_Config.Type = Config->Type;
-   BLASTER_Config.Interrupt = Config->Interrupt;
-   BLASTER_Config.Dma8 = Config->Dma8;
-   BLASTER_Config.Dma16 = Config->Dma16;
-   BLASTER_Config.Midi = Config->Midi;
+    BLASTER_Config.Address = Config->Address;
+    BLASTER_Config.Type = Config->Type;
+    BLASTER_Config.Interrupt = Config->Interrupt;
+    BLASTER_Config.Dma8 = Config->Dma8;
+    BLASTER_Config.Dma16 = Config->Dma16;
+    BLASTER_Config.Midi = Config->Midi;
 
-   return (BLASTER_Ok);
+    return (BLASTER_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -1327,32 +1327,32 @@ int BLASTER_GetCardInfo(
     int *MaxChannels)
 
 {
-   int CardType;
-   CardType = BLASTER_Config.Type;
-   if (CardType == UNDEFINED)
-   {
-      BLASTER_SetErrorCode(BLASTER_TypeNotSet);
-      return BLASTER_Error;
-   }
-   if (BLASTER_CardConfig[CardType].MaxMixMode & STEREO)
-   {
-      *MaxChannels = 2;
-   }
-   else
-   {
-      *MaxChannels = 1;
-   }
+    int CardType;
+    CardType = BLASTER_Config.Type;
+    if (CardType == UNDEFINED)
+    {
+        BLASTER_SetErrorCode(BLASTER_TypeNotSet);
+        return BLASTER_Error;
+    }
+    if (BLASTER_CardConfig[CardType].MaxMixMode & STEREO)
+    {
+        *MaxChannels = 2;
+    }
+    else
+    {
+        *MaxChannels = 1;
+    }
 
-   if (BLASTER_CardConfig[CardType].MaxMixMode & SIXTEEN_BIT)
-   {
-      *MaxSampleBits = 16;
-   }
-   else
-   {
-      *MaxSampleBits = 8;
-   }
+    if (BLASTER_CardConfig[CardType].MaxMixMode & SIXTEEN_BIT)
+    {
+        *MaxSampleBits = 16;
+    }
+    else
+    {
+        *MaxSampleBits = 8;
+    }
 
-   return (BLASTER_Ok);
+    return (BLASTER_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -1365,7 +1365,7 @@ void BLASTER_SetCallBack(
     void (*func)(void))
 
 {
-   BLASTER_CallBack = func;
+    BLASTER_CallBack = func;
 }
 
 /*---------------------------------------------------------------------
@@ -1378,23 +1378,23 @@ void BLASTER_SaveVoiceVolume(
     void)
 
 {
-   if (!BLASTER_CardHasMixer())
-      return;
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      BLASTER_OriginalVoiceVolumeLeft =
-          BLASTER_ReadMixer(MIXER_SBProVoice);
-      break;
+    if (!BLASTER_CardHasMixer())
+        return;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        BLASTER_OriginalVoiceVolumeLeft =
+            BLASTER_ReadMixer(MIXER_SBProVoice);
+        break;
 
-   case SB16:
-      BLASTER_OriginalVoiceVolumeLeft =
-          BLASTER_ReadMixer(MIXER_SB16VoiceLeft);
-      BLASTER_OriginalVoiceVolumeRight =
-          BLASTER_ReadMixer(MIXER_SB16VoiceRight);
-      break;
-   }
+    case SB16:
+        BLASTER_OriginalVoiceVolumeLeft =
+            BLASTER_ReadMixer(MIXER_SB16VoiceLeft);
+        BLASTER_OriginalVoiceVolumeRight =
+            BLASTER_ReadMixer(MIXER_SB16VoiceRight);
+        break;
+    }
 }
 
 /*---------------------------------------------------------------------
@@ -1407,23 +1407,23 @@ void BLASTER_RestoreVoiceVolume(
     void)
 
 {
-   if (!BLASTER_CardHasMixer())
-      return;
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      BLASTER_WriteMixer(MIXER_SBProVoice,
-                         BLASTER_OriginalVoiceVolumeLeft);
-      break;
+    if (!BLASTER_CardHasMixer())
+        return;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        BLASTER_WriteMixer(MIXER_SBProVoice,
+                           BLASTER_OriginalVoiceVolumeLeft);
+        break;
 
-   case SB16:
-      BLASTER_WriteMixer(MIXER_SB16VoiceLeft,
-                         BLASTER_OriginalVoiceVolumeLeft);
-      BLASTER_WriteMixer(MIXER_SB16VoiceRight,
-                         BLASTER_OriginalVoiceVolumeRight);
-      break;
-   }
+    case SB16:
+        BLASTER_WriteMixer(MIXER_SB16VoiceLeft,
+                           BLASTER_OriginalVoiceVolumeLeft);
+        BLASTER_WriteMixer(MIXER_SB16VoiceRight,
+                           BLASTER_OriginalVoiceVolumeRight);
+        break;
+    }
 }
 
 /*---------------------------------------------------------------------
@@ -1436,23 +1436,23 @@ void BLASTER_SaveMidiVolume(
     void)
 
 {
-   if (!BLASTER_CardHasMixer())
-      return;
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      BLASTER_OriginalMidiVolumeLeft =
-          BLASTER_ReadMixer(MIXER_SBProMidi);
-      break;
+    if (!BLASTER_CardHasMixer())
+        return;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        BLASTER_OriginalMidiVolumeLeft =
+            BLASTER_ReadMixer(MIXER_SBProMidi);
+        break;
 
-   case SB16:
-      BLASTER_OriginalMidiVolumeLeft =
-          BLASTER_ReadMixer(MIXER_SB16MidiLeft);
-      BLASTER_OriginalMidiVolumeRight =
-          BLASTER_ReadMixer(MIXER_SB16MidiRight);
-      break;
-   }
+    case SB16:
+        BLASTER_OriginalMidiVolumeLeft =
+            BLASTER_ReadMixer(MIXER_SB16MidiLeft);
+        BLASTER_OriginalMidiVolumeRight =
+            BLASTER_ReadMixer(MIXER_SB16MidiRight);
+        break;
+    }
 }
 
 /*---------------------------------------------------------------------
@@ -1465,23 +1465,23 @@ void BLASTER_RestoreMidiVolume(
     void)
 
 {
-   if (!BLASTER_CardHasMixer())
-      return;
-   switch (BLASTER_MixerType)
-   {
-   case SBPro:
-   case SBPro2:
-      BLASTER_WriteMixer(MIXER_SBProMidi,
-                         BLASTER_OriginalMidiVolumeLeft);
-      break;
+    if (!BLASTER_CardHasMixer())
+        return;
+    switch (BLASTER_MixerType)
+    {
+    case SBPro:
+    case SBPro2:
+        BLASTER_WriteMixer(MIXER_SBProMidi,
+                           BLASTER_OriginalMidiVolumeLeft);
+        break;
 
-   case SB16:
-      BLASTER_WriteMixer(MIXER_SB16MidiLeft,
-                         BLASTER_OriginalMidiVolumeLeft);
-      BLASTER_WriteMixer(MIXER_SB16MidiRight,
-                         BLASTER_OriginalMidiVolumeRight);
-      break;
-   }
+    case SB16:
+        BLASTER_WriteMixer(MIXER_SB16MidiLeft,
+                           BLASTER_OriginalMidiVolumeLeft);
+        BLASTER_WriteMixer(MIXER_SB16MidiRight,
+                           BLASTER_OriginalMidiVolumeRight);
+        break;
+    }
 }
 
 /*---------------------------------------------------------------------
@@ -1495,73 +1495,73 @@ int BLASTER_Init(
     void)
 
 {
-   int Irq;
-   int Interrupt;
-   int status;
+    int Irq;
+    int Interrupt;
+    int status;
 
-   if (BLASTER_Installed)
-   {
-      BLASTER_Shutdown();
-   }
+    if (BLASTER_Installed)
+    {
+        BLASTER_Shutdown();
+    }
 
-   // Save the interrupt masks
-   BLASTER_IntController1Mask = inp(0x21);
-   BLASTER_IntController2Mask = inp(0xA1);
+    // Save the interrupt masks
+    BLASTER_IntController1Mask = inp(0x21);
+    BLASTER_IntController2Mask = inp(0xA1);
 
-   status = BLASTER_ResetDSP();
-   if (status == BLASTER_Ok)
-   {
-      BLASTER_SaveVoiceVolume();
+    status = BLASTER_ResetDSP();
+    if (status == BLASTER_Ok)
+    {
+        BLASTER_SaveVoiceVolume();
 
-      BLASTER_SoundPlaying = FALSE;
+        BLASTER_SoundPlaying = FALSE;
 
-      BLASTER_SetCallBack(NULL);
+        BLASTER_SetCallBack(NULL);
 
-      BLASTER_DMABuffer = NULL;
+        BLASTER_DMABuffer = NULL;
 
-      BLASTER_Version = BLASTER_GetDSPVersion();
+        BLASTER_Version = BLASTER_GetDSPVersion();
 
-      BLASTER_SetPlaybackRate(BLASTER_DefaultSampleRate);
-      BLASTER_SetMixMode(BLASTER_DefaultMixMode);
+        BLASTER_SetPlaybackRate(BLASTER_DefaultSampleRate);
+        BLASTER_SetMixMode(BLASTER_DefaultMixMode);
 
-      if (BLASTER_Config.Dma16 != UNDEFINED)
-      {
-         status = DMA_VerifyChannel(BLASTER_Config.Dma16);
-         if (status == DMA_Error)
-         {
-            BLASTER_SetErrorCode(BLASTER_DmaError);
+        if (BLASTER_Config.Dma16 != UNDEFINED)
+        {
+            status = DMA_VerifyChannel(BLASTER_Config.Dma16);
+            if (status == DMA_Error)
+            {
+                BLASTER_SetErrorCode(BLASTER_DmaError);
+                return (BLASTER_Error);
+            }
+        }
+
+        if (BLASTER_Config.Dma8 != UNDEFINED)
+        {
+            status = DMA_VerifyChannel(BLASTER_Config.Dma8);
+            if (status == DMA_Error)
+            {
+                BLASTER_SetErrorCode(BLASTER_DmaError);
+                return (BLASTER_Error);
+            }
+        }
+
+        // Install our interrupt handler
+        Irq = BLASTER_Config.Interrupt;
+        Interrupt = BLASTER_Interrupts[Irq];
+        if (Interrupt == INVALID)
+        {
+            BLASTER_SetErrorCode(BLASTER_InvalidIrq);
             return (BLASTER_Error);
-         }
-      }
+        }
 
-      if (BLASTER_Config.Dma8 != UNDEFINED)
-      {
-         status = DMA_VerifyChannel(BLASTER_Config.Dma8);
-         if (status == DMA_Error)
-         {
-            BLASTER_SetErrorCode(BLASTER_DmaError);
-            return (BLASTER_Error);
-         }
-      }
+        BLASTER_OldInt = getvect(Interrupt);
+        setvect(Interrupt, BLASTER_ServiceInterrupt);
 
-      // Install our interrupt handler
-      Irq = BLASTER_Config.Interrupt;
-      Interrupt = BLASTER_Interrupts[Irq];
-      if (Interrupt == INVALID)
-      {
-         BLASTER_SetErrorCode(BLASTER_InvalidIrq);
-         return (BLASTER_Error);
-      }
+        BLASTER_Installed = TRUE;
+        status = BLASTER_Ok;
+    }
 
-      BLASTER_OldInt = getvect(Interrupt);
-      setvect(Interrupt, BLASTER_ServiceInterrupt);
-
-      BLASTER_Installed = TRUE;
-      status = BLASTER_Ok;
-   }
-
-   BLASTER_SetErrorCode(status);
-   return (status);
+    BLASTER_SetErrorCode(status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -1575,27 +1575,27 @@ void BLASTER_Shutdown(
     void)
 
 {
-   int Irq;
-   int Interrupt;
+    int Irq;
+    int Interrupt;
 
-   // Halt the DMA transfer
-   BLASTER_StopPlayback();
+    // Halt the DMA transfer
+    BLASTER_StopPlayback();
 
-   BLASTER_RestoreVoiceVolume();
+    BLASTER_RestoreVoiceVolume();
 
-   // Reset the DSP
-   BLASTER_ResetDSP();
+    // Reset the DSP
+    BLASTER_ResetDSP();
 
-   // Restore the original interrupt
-   Irq = BLASTER_Config.Interrupt;
-   Interrupt = BLASTER_Interrupts[Irq];
-   setvect(Interrupt, BLASTER_OldInt);
+    // Restore the original interrupt
+    Irq = BLASTER_Config.Interrupt;
+    Interrupt = BLASTER_Interrupts[Irq];
+    setvect(Interrupt, BLASTER_OldInt);
 
-   BLASTER_SoundPlaying = FALSE;
+    BLASTER_SoundPlaying = FALSE;
 
-   BLASTER_DMABuffer = NULL;
+    BLASTER_DMABuffer = NULL;
 
-   BLASTER_SetCallBack(NULL);
+    BLASTER_SetCallBack(NULL);
 
-   BLASTER_Installed = FALSE;
+    BLASTER_Installed = FALSE;
 }

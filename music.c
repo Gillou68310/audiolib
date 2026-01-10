@@ -50,7 +50,7 @@ int MUSIC_InitFM(int card, midifuncs *Funcs);
 int MUSIC_InitMidi(int card, midifuncs *Funcs, int Address);
 
 #define MUSIC_SetErrorCode(status) \
-   MUSIC_ErrorCode = (status);
+    MUSIC_ErrorCode = (status);
 
 /*---------------------------------------------------------------------
    Function: MUSIC_ErrorString
@@ -63,58 +63,58 @@ char *MUSIC_ErrorString(
     int ErrorNumber)
 
 {
-   char *ErrorString;
+    char *ErrorString;
 
-   switch (ErrorNumber)
-   {
-   case MUSIC_Warning:
-   case MUSIC_Error:
-      ErrorString = MUSIC_ErrorString(MUSIC_ErrorCode);
-      break;
+    switch (ErrorNumber)
+    {
+    case MUSIC_Warning:
+    case MUSIC_Error:
+        ErrorString = MUSIC_ErrorString(MUSIC_ErrorCode);
+        break;
 
-   case MUSIC_Ok:
-      ErrorString = "Music ok.";
-      break;
+    case MUSIC_Ok:
+        ErrorString = "Music ok.";
+        break;
 
-   case MUSIC_SoundCardError:
-      switch (MUSIC_SoundDevice)
-      {
-      case SoundBlaster:
-      case ProAudioSpectrum:
-      case Adlib:
-      case GenMidi:
-      case WaveBlaster:
-         ErrorString = "Music sound card error.";
-         break;
+    case MUSIC_SoundCardError:
+        switch (MUSIC_SoundDevice)
+        {
+        case SoundBlaster:
+        case ProAudioSpectrum:
+        case Adlib:
+        case GenMidi:
+        case WaveBlaster:
+            ErrorString = "Music sound card error.";
+            break;
 
-      default:
-         ErrorString = "Invalid Music device error.";
-         break;
-      }
-      break;
+        default:
+            ErrorString = "Invalid Music device error.";
+            break;
+        }
+        break;
 
-   case MUSIC_InvalidCard:
-      ErrorString = "Invalid Music device.";
-      break;
+    case MUSIC_InvalidCard:
+        ErrorString = "Invalid Music device.";
+        break;
 
-   case MUSIC_MidiError:
-      ErrorString = "Error playing MIDI file.";
-      break;
+    case MUSIC_MidiError:
+        ErrorString = "Error playing MIDI file.";
+        break;
 
-   case MUSIC_TaskManError:
-      ErrorString = "TaskMan error.";
-      break;
+    case MUSIC_TaskManError:
+        ErrorString = "TaskMan error.";
+        break;
 
-   case MUSIC_FMNotDetected:
-      ErrorString = "Could not detect FM chip.";
-      break;
+    case MUSIC_FMNotDetected:
+        ErrorString = "Could not detect FM chip.";
+        break;
 
-   default:
-      ErrorString = "Unknown Music error code.";
-      break;
-   }
+    default:
+        ErrorString = "Unknown Music error code.";
+        break;
+    }
 
-   return (ErrorString);
+    return (ErrorString);
 }
 
 /*---------------------------------------------------------------------
@@ -128,31 +128,31 @@ int MUSIC_Init(
     int Address)
 
 {
-   int i;
-   int status;
+    int i;
+    int status;
 
-   status = MUSIC_Ok;
-   MUSIC_SoundDevice = SoundCard;
+    status = MUSIC_Ok;
+    MUSIC_SoundDevice = SoundCard;
 
-   switch (SoundCard)
-   {
-   case SoundBlaster:
-   case Adlib:
-   case ProAudioSpectrum:
-      status = MUSIC_InitFM(SoundCard, &MUSIC_MidiFunctions);
-      break;
+    switch (SoundCard)
+    {
+    case SoundBlaster:
+    case Adlib:
+    case ProAudioSpectrum:
+        status = MUSIC_InitFM(SoundCard, &MUSIC_MidiFunctions);
+        break;
 
-   case GenMidi:
-   case WaveBlaster:
-      status = MUSIC_InitMidi(SoundCard, &MUSIC_MidiFunctions, Address);
-      break;
+    case GenMidi:
+    case WaveBlaster:
+        status = MUSIC_InitMidi(SoundCard, &MUSIC_MidiFunctions, Address);
+        break;
 
-   default:
-      MUSIC_SetErrorCode(MUSIC_InvalidCard);
-      status = MUSIC_Error;
-   }
+    default:
+        MUSIC_SetErrorCode(MUSIC_InvalidCard);
+        status = MUSIC_Error;
+    }
 
-   return (status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -165,32 +165,32 @@ int MUSIC_Shutdown(
     void)
 
 {
-   int status;
+    int status;
 
-   status = MUSIC_Ok;
+    status = MUSIC_Ok;
 
-   MIDI_StopSong();
+    MIDI_StopSong();
 
-   switch (MUSIC_SoundDevice)
-   {
-   case Adlib:
-      AL_Shutdown();
-      break;
+    switch (MUSIC_SoundDevice)
+    {
+    case Adlib:
+        AL_Shutdown();
+        break;
 
-   case SoundBlaster:
-      AL_Shutdown();
+    case SoundBlaster:
+        AL_Shutdown();
 
-   case WaveBlaster:
-      BLASTER_RestoreMidiVolume();
-      break;
+    case WaveBlaster:
+        BLASTER_RestoreMidiVolume();
+        break;
 
-   case ProAudioSpectrum:
-      AL_Shutdown();
-      PAS_RestoreMusicVolume();
-      break;
-   }
+    case ProAudioSpectrum:
+        AL_Shutdown();
+        PAS_RestoreMusicVolume();
+        break;
+    }
 
-   return (status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -203,10 +203,10 @@ void MUSIC_SetVolume(
     int volume)
 
 {
-   volume = max(0, volume);
-   volume = min(volume, 255);
+    volume = max(0, volume);
+    volume = min(volume, 255);
 
-   MIDI_SetVolume(volume);
+    MIDI_SetVolume(volume);
 }
 
 /*---------------------------------------------------------------------
@@ -219,7 +219,7 @@ int MUSIC_GetVolume(
     void)
 
 {
-   return (MIDI_GetVolume());
+    return (MIDI_GetVolume());
 }
 
 /*---------------------------------------------------------------------
@@ -233,7 +233,7 @@ void MUSIC_SetLoopFlag(
     int loopflag)
 
 {
-   MIDI_SetLoopFlag(loopflag);
+    MIDI_SetLoopFlag(loopflag);
 }
 
 /*---------------------------------------------------------------------
@@ -246,7 +246,7 @@ int MUSIC_SongPlaying(
     void)
 
 {
-   return (MIDI_SongPlaying());
+    return (MIDI_SongPlaying());
 }
 
 /*---------------------------------------------------------------------
@@ -259,7 +259,7 @@ void MUSIC_Continue(
     void)
 
 {
-   MIDI_ContinueSong();
+    MIDI_ContinueSong();
 }
 
 /*---------------------------------------------------------------------
@@ -272,7 +272,7 @@ void MUSIC_Pause(
     void)
 
 {
-   MIDI_PauseSong();
+    MIDI_PauseSong();
 }
 
 /*---------------------------------------------------------------------
@@ -285,9 +285,9 @@ int MUSIC_StopSong(
     void)
 
 {
-   MIDI_StopSong();
-   MUSIC_SetErrorCode(MUSIC_Ok);
-   return (MUSIC_Ok);
+    MIDI_StopSong();
+    MUSIC_SetErrorCode(MUSIC_Ok);
+    return (MUSIC_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -301,31 +301,31 @@ int MUSIC_PlaySong(
     int loopflag)
 
 {
-   int status;
+    int status;
 
-   switch (MUSIC_SoundDevice)
-   {
-   case SoundBlaster:
-   case Adlib:
-   case ProAudioSpectrum:
-   case GenMidi:
-   case WaveBlaster:
+    switch (MUSIC_SoundDevice)
+    {
+    case SoundBlaster:
+    case Adlib:
+    case ProAudioSpectrum:
+    case GenMidi:
+    case WaveBlaster:
 
-      MIDI_StopSong();
-      status = MIDI_PlaySong(song, loopflag);
-      if (status != MIDI_Ok)
-      {
-         MUSIC_SetErrorCode(MUSIC_MidiError);
-         return (MUSIC_Warning);
-      }
-      break;
+        MIDI_StopSong();
+        status = MIDI_PlaySong(song, loopflag);
+        if (status != MIDI_Ok)
+        {
+            MUSIC_SetErrorCode(MUSIC_MidiError);
+            return (MUSIC_Warning);
+        }
+        break;
 
-   default:
-      MUSIC_SetErrorCode(MUSIC_InvalidCard);
-      return (MUSIC_Warning);
-   }
+    default:
+        MUSIC_SetErrorCode(MUSIC_InvalidCard);
+        return (MUSIC_Warning);
+    }
 
-   return (MUSIC_Ok);
+    return (MUSIC_Ok);
 }
 
 int MUSIC_InitFM(
@@ -333,66 +333,66 @@ int MUSIC_InitFM(
     midifuncs *Funcs)
 
 {
-   int status;
+    int status;
 
-   status = MIDI_Ok;
+    status = MIDI_Ok;
 
-   if (!AL_DetectFM())
-   {
-      MUSIC_SetErrorCode(MUSIC_FMNotDetected);
-      return (MUSIC_Error);
-   }
+    if (!AL_DetectFM())
+    {
+        MUSIC_SetErrorCode(MUSIC_FMNotDetected);
+        return (MUSIC_Error);
+    }
 
-   // Init the fm routines
-   AL_Init(card);
+    // Init the fm routines
+    AL_Init(card);
 
-   Funcs->NoteOff = AL_NoteOff;
-   Funcs->NoteOn = AL_NoteOn;
-   Funcs->PolyAftertouch = NULL;
-   Funcs->ControlChange = AL_ControlChange;
-   Funcs->ProgramChange = AL_ProgramChange;
-   Funcs->ChannelAftertouch = NULL;
-   Funcs->PitchBend = AL_SetPitchBend;
-   Funcs->ReleasePatches = NULL;
-   Funcs->LoadPatch = NULL;
+    Funcs->NoteOff = AL_NoteOff;
+    Funcs->NoteOn = AL_NoteOn;
+    Funcs->PolyAftertouch = NULL;
+    Funcs->ControlChange = AL_ControlChange;
+    Funcs->ProgramChange = AL_ProgramChange;
+    Funcs->ChannelAftertouch = NULL;
+    Funcs->PitchBend = AL_SetPitchBend;
+    Funcs->ReleasePatches = NULL;
+    Funcs->LoadPatch = NULL;
 
-   switch (card)
-   {
-   case SoundBlaster:
-      if (BLASTER_CardHasMixer())
-      {
-         BLASTER_SaveMidiVolume();
-         Funcs->SetVolume = (void (*)(int volume))BLASTER_SetMidiVolume;
-         Funcs->GetVolume = BLASTER_GetMidiVolume;
-      }
-      else
-      {
-         Funcs->SetVolume = NULL;
-         Funcs->GetVolume = NULL;
-      }
-      break;
+    switch (card)
+    {
+    case SoundBlaster:
+        if (BLASTER_CardHasMixer())
+        {
+            BLASTER_SaveMidiVolume();
+            Funcs->SetVolume = (void (*)(int volume))BLASTER_SetMidiVolume;
+            Funcs->GetVolume = BLASTER_GetMidiVolume;
+        }
+        else
+        {
+            Funcs->SetVolume = NULL;
+            Funcs->GetVolume = NULL;
+        }
+        break;
 
-   case Adlib:
-      Funcs->SetVolume = NULL;
-      Funcs->GetVolume = NULL;
-      break;
+    case Adlib:
+        Funcs->SetVolume = NULL;
+        Funcs->GetVolume = NULL;
+        break;
 
-   case ProAudioSpectrum:
-      if (PAS_SaveMusicVolume() == PAS_Ok)
-      {
-         Funcs->SetVolume = PAS_SetFMVolume;
-         Funcs->GetVolume = PAS_GetFMVolume;
-      }
-      break;
-   }
+    case ProAudioSpectrum:
+        if (PAS_SaveMusicVolume() == PAS_Ok)
+        {
+            Funcs->SetVolume = PAS_SetFMVolume;
+            Funcs->GetVolume = PAS_GetFMVolume;
+        }
+        break;
+    }
 
-   if (MIDI_SetMidiFuncs(Funcs))
-   {
-      MUSIC_SetErrorCode(MUSIC_SoundCardError);
-      status = MUSIC_Error;
-   }
+    if (MIDI_SetMidiFuncs(Funcs))
+    {
+        MUSIC_SetErrorCode(MUSIC_SoundCardError);
+        status = MUSIC_Error;
+    }
 
-   return (status);
+    return (status);
 }
 
 int MUSIC_InitMidi(
@@ -401,43 +401,43 @@ int MUSIC_InitMidi(
     int Address)
 
 {
-   int status;
+    int status;
 
-   status = MUSIC_Ok;
+    status = MUSIC_Ok;
 
-   if (MPU_Init(Address) != MPU_Ok)
-   {
-      MUSIC_SetErrorCode(MUSIC_SoundCardError);
-      return (MUSIC_Error);
-   }
+    if (MPU_Init(Address) != MPU_Ok)
+    {
+        MUSIC_SetErrorCode(MUSIC_SoundCardError);
+        return (MUSIC_Error);
+    }
 
-   Funcs->NoteOff = MPU_NoteOff;
-   Funcs->NoteOn = MPU_NoteOn;
-   Funcs->PolyAftertouch = MPU_PolyAftertouch;
-   Funcs->ControlChange = MPU_ControlChange;
-   Funcs->ProgramChange = MPU_ProgramChange;
-   Funcs->ChannelAftertouch = MPU_ChannelAftertouch;
-   Funcs->PitchBend = MPU_PitchBend;
-   Funcs->ReleasePatches = NULL;
-   Funcs->LoadPatch = NULL;
-   Funcs->SetVolume = NULL;
-   Funcs->GetVolume = NULL;
+    Funcs->NoteOff = MPU_NoteOff;
+    Funcs->NoteOn = MPU_NoteOn;
+    Funcs->PolyAftertouch = MPU_PolyAftertouch;
+    Funcs->ControlChange = MPU_ControlChange;
+    Funcs->ProgramChange = MPU_ProgramChange;
+    Funcs->ChannelAftertouch = MPU_ChannelAftertouch;
+    Funcs->PitchBend = MPU_PitchBend;
+    Funcs->ReleasePatches = NULL;
+    Funcs->LoadPatch = NULL;
+    Funcs->SetVolume = NULL;
+    Funcs->GetVolume = NULL;
 
-   if (card == WaveBlaster)
-   {
-      if (BLASTER_CardHasMixer())
-      {
-         BLASTER_SaveMidiVolume();
-         Funcs->SetVolume = (void (*)(int volume))BLASTER_SetMidiVolume;
-         Funcs->GetVolume = BLASTER_GetMidiVolume;
-      }
-   }
+    if (card == WaveBlaster)
+    {
+        if (BLASTER_CardHasMixer())
+        {
+            BLASTER_SaveMidiVolume();
+            Funcs->SetVolume = (void (*)(int volume))BLASTER_SetMidiVolume;
+            Funcs->GetVolume = BLASTER_GetMidiVolume;
+        }
+    }
 
-   if (MIDI_SetMidiFuncs(Funcs))
-   {
-      MUSIC_SetErrorCode(MUSIC_SoundCardError);
-      status = MUSIC_Error;
-   }
+    if (MIDI_SetMidiFuncs(Funcs))
+    {
+        MUSIC_SetErrorCode(MUSIC_SoundCardError);
+        status = MUSIC_Error;
+    }
 
-   return (status);
+    return (status);
 }

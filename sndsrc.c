@@ -67,7 +67,7 @@ static char *SS_CurrentBuffer;
 volatile int SS_SoundPlaying;
 
 #define SS_SetErrorCode(status) \
-   SS_ErrorCode = (status);
+    SS_ErrorCode = (status);
 
 /*---------------------------------------------------------------------
    Function: SS_ErrorString
@@ -80,32 +80,32 @@ char *SS_ErrorString(
     int ErrorNumber)
 
 {
-   char *ErrorString;
+    char *ErrorString;
 
-   switch (ErrorNumber)
-   {
-   case SS_Error:
-      ErrorString = SS_ErrorString(SS_ErrorCode);
-      break;
+    switch (ErrorNumber)
+    {
+    case SS_Error:
+        ErrorString = SS_ErrorString(SS_ErrorCode);
+        break;
 
-   case SS_Ok:
-      ErrorString = "Sound Source ok.";
-      break;
+    case SS_Ok:
+        ErrorString = "Sound Source ok.";
+        break;
 
-   case SS_NotFound:
-      ErrorString = "Could not detect Sound Source.";
-      break;
+    case SS_NotFound:
+        ErrorString = "Could not detect Sound Source.";
+        break;
 
-   case SS_NoSoundPlaying:
-      ErrorString = "No sound playing.";
-      break;
+    case SS_NoSoundPlaying:
+        ErrorString = "No sound playing.";
+        break;
 
-   default:
-      ErrorString = "Unknown Sound Source error code.";
-      break;
-   }
+    default:
+        ErrorString = "Unknown Sound Source error code.";
+        break;
+    }
 
-   return (ErrorString);
+    return (ErrorString);
 }
 
 /*---------------------------------------------------------------------
@@ -119,44 +119,44 @@ static void SS_ServiceInterrupt(
     task *Task)
 
 {
-   int port = SS_Port;
-   int count;
+    int port = SS_Port;
+    int count;
 
-   (void)Task;
-   count = 0;
-   while ((inp(port + 1) & 0x40) == 0)
-   {
-      outp(port, *SS_SoundPtr++);
-      outp(port + 2, SS_OffCommand);
-      outp(port + 2, 4);
+    (void)Task;
+    count = 0;
+    while ((inp(port + 1) & 0x40) == 0)
+    {
+        outp(port, *SS_SoundPtr++);
+        outp(port + 2, SS_OffCommand);
+        outp(port + 2, 4);
 
-      SS_CurrentLength--;
-      if (SS_CurrentLength == 0)
-      {
-         // Keep track of current buffer
-         SS_CurrentBuffer += SS_TransferLength;
-         SS_BufferNum++;
-         if (SS_BufferNum >= SS_NumBuffers)
-         {
-            SS_BufferNum = 0;
-            SS_CurrentBuffer = SS_BufferStart;
-         }
+        SS_CurrentLength--;
+        if (SS_CurrentLength == 0)
+        {
+            // Keep track of current buffer
+            SS_CurrentBuffer += SS_TransferLength;
+            SS_BufferNum++;
+            if (SS_BufferNum >= SS_NumBuffers)
+            {
+                SS_BufferNum = 0;
+                SS_CurrentBuffer = SS_BufferStart;
+            }
 
-         SS_CurrentLength = SS_TransferLength;
-         SS_SoundPtr = SS_CurrentBuffer;
+            SS_CurrentLength = SS_TransferLength;
+            SS_SoundPtr = SS_CurrentBuffer;
 
-         count = 1;
-      }
-   }
+            count = 1;
+        }
+    }
 
-   if (count == 1)
-   {
-      // Call the caller's callback function
-      if (SS_CallBack != NULL)
-      {
-         SS_CallBack();
-      }
-   }
+    if (count == 1)
+    {
+        // Call the caller's callback function
+        if (SS_CallBack != NULL)
+        {
+            SS_CallBack();
+        }
+    }
 }
 
 /*---------------------------------------------------------------------
@@ -169,18 +169,18 @@ void SS_StopPlayback(
     void)
 
 {
-   if (SS_SoundPlaying)
-   {
-      TS_Terminate(SS_Timer);
+    if (SS_SoundPlaying)
+    {
+        TS_Terminate(SS_Timer);
 
-      outp(SS_Port, 0x80);
-      outp(SS_Port + 2, SS_OffCommand);
-      outp(SS_Port + 2, 4);
+        outp(SS_Port, 0x80);
+        outp(SS_Port + 2, SS_OffCommand);
+        outp(SS_Port + 2, 4);
 
-      SS_SoundPlaying = FALSE;
+        SS_SoundPlaying = FALSE;
 
-      SS_BufferStart = NULL;
-   }
+        SS_BufferStart = NULL;
+    }
 }
 
 /*---------------------------------------------------------------------
@@ -193,17 +193,17 @@ int SS_GetCurrentPos(
     void)
 
 {
-   int offset;
+    int offset;
 
-   if (!SS_SoundPlaying)
-   {
-      SS_SetErrorCode(SS_NoSoundPlaying);
-      return (SS_Warning);
-   }
+    if (!SS_SoundPlaying)
+    {
+        SS_SetErrorCode(SS_NoSoundPlaying);
+        return (SS_Warning);
+    }
 
-   offset = SS_SoundPtr - SS_CurrentBuffer;
+    offset = SS_SoundPtr - SS_CurrentBuffer;
 
-   return (offset);
+    return (offset);
 }
 
 /*---------------------------------------------------------------------
@@ -219,30 +219,30 @@ int SS_BeginBufferedPlayback(
     void (*CallBackFunc)(void))
 
 {
-   if (SS_SoundPlaying)
-   {
-      SS_StopPlayback();
-   }
+    if (SS_SoundPlaying)
+    {
+        SS_StopPlayback();
+    }
 
-   SS_SetCallBack(CallBackFunc);
+    SS_SetCallBack(CallBackFunc);
 
-   SS_BufferStart = BufferStart;
-   SS_CurrentBuffer = BufferStart;
-   SS_SoundPtr = BufferStart;
-   SS_TotalBufferSize = BufferSize;
-   SS_BufferEnd = BufferStart + BufferSize;
-   SS_TransferLength = BufferSize / NumDivisions;
-   SS_CurrentLength = SS_TransferLength;
-   SS_BufferNum = 0;
-   SS_NumBuffers = NumDivisions;
+    SS_BufferStart = BufferStart;
+    SS_CurrentBuffer = BufferStart;
+    SS_SoundPtr = BufferStart;
+    SS_TotalBufferSize = BufferSize;
+    SS_BufferEnd = BufferStart + BufferSize;
+    SS_TransferLength = BufferSize / NumDivisions;
+    SS_CurrentLength = SS_TransferLength;
+    SS_BufferNum = 0;
+    SS_NumBuffers = NumDivisions;
 
-   SS_SoundPlaying = TRUE;
+    SS_SoundPlaying = TRUE;
 
-   //   SS_Timer = TS_ScheduleTask( SS_ServiceInterrupt, 438, 1, NULL );
-   SS_Timer = TS_ScheduleTask(SS_ServiceInterrupt, 500, 1, NULL);
-   TS_Dispatch();
+    //   SS_Timer = TS_ScheduleTask( SS_ServiceInterrupt, 438, 1, NULL );
+    SS_Timer = TS_ScheduleTask(SS_ServiceInterrupt, 500, 1, NULL);
+    TS_Dispatch();
 
-   return (SS_Ok);
+    return (SS_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -256,7 +256,7 @@ int SS_GetPlaybackRate(
     void)
 
 {
-   return (SS_SampleRate);
+    return (SS_SampleRate);
 }
 
 /*---------------------------------------------------------------------
@@ -269,8 +269,8 @@ int SS_SetMixMode(
     int mode)
 
 {
-   mode = MONO_8BIT;
-   return (mode);
+    mode = MONO_8BIT;
+    return (mode);
 }
 
 /*---------------------------------------------------------------------
@@ -283,14 +283,14 @@ int SS_SetPort(
     int port)
 
 {
-   if (SS_Installed)
-   {
-      SS_Shutdown();
-   }
+    if (SS_Installed)
+    {
+        SS_Shutdown();
+    }
 
-   SS_Port = port;
+    SS_Port = port;
 
-   return (SS_Ok);
+    return (SS_Ok);
 }
 
 /*---------------------------------------------------------------------
@@ -303,7 +303,7 @@ void SS_SetCallBack(
     void (*func)(void))
 
 {
-   SS_CallBack = func;
+    SS_CallBack = func;
 }
 
 /*---------------------------------------------------------------------
@@ -316,7 +316,7 @@ void SS_TestTimer(
     task *Task)
 
 {
-   (*(int *)(Task->data))++;
+    (*(int *)(Task->data))++;
 }
 
 /*---------------------------------------------------------------------
@@ -329,45 +329,45 @@ int SS_TestSoundSource(
     int port)
 
 {
-   int present;
-   task *timer;
-   volatile int ticks;
-   int i;
+    int present;
+    task *timer;
+    volatile int ticks;
+    int i;
 
-   present = FALSE;
+    present = FALSE;
 
-   timer = TS_ScheduleTask(SS_TestTimer, 140, 1, &ticks);
-   TS_Dispatch();
+    timer = TS_ScheduleTask(SS_TestTimer, 140, 1, &ticks);
+    TS_Dispatch();
 
-   outp(port + 2, 4);
+    outp(port + 2, 4);
 
-   ticks = 0;
+    ticks = 0;
 
-   while (ticks < 4)
-   {
-      // Do nothing for a while
-   }
+    while (ticks < 4)
+    {
+        // Do nothing for a while
+    }
 
-   TS_Terminate(timer);
+    TS_Terminate(timer);
 
-   if ((inp(port + 1) & 0x40) == 0)
-   {
-      for (i = 32; i > 0; i++)
-      {
-         outp(port, 0x80);
-         outp(port + 2, SS_OffCommand);
-         outp(port + 2, 4);
-      }
+    if ((inp(port + 1) & 0x40) == 0)
+    {
+        for (i = 32; i > 0; i++)
+        {
+            outp(port, 0x80);
+            outp(port + 2, SS_OffCommand);
+            outp(port + 2, 4);
+        }
 
-      if (inp(port + 1) & 0x40)
-      {
-         present = TRUE;
-      }
-   }
+        if (inp(port + 1) & 0x40)
+        {
+            present = TRUE;
+        }
+    }
 
-   outp(port + 2, SS_OffCommand);
+    outp(port + 2, SS_OffCommand);
 
-   return (present);
+    return (present);
 }
 
 /*---------------------------------------------------------------------
@@ -380,43 +380,43 @@ int SS_DetectSoundSource(
     void)
 
 {
-   if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT1))
-   {
-      SS_Port = SS_Port1;
-      return (TRUE);
-   }
+    if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT1))
+    {
+        SS_Port = SS_Port1;
+        return (TRUE);
+    }
 
-   if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT2))
-   {
-      SS_Port = SS_Port2;
-      return (TRUE);
-   }
+    if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT2))
+    {
+        SS_Port = SS_Port2;
+        return (TRUE);
+    }
 
-   if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT3))
-   {
-      SS_Port = SS_Port3;
-      return (TRUE);
-   }
+    if (USER_CheckParameter(SELECT_SOUNDSOURCE_PORT3))
+    {
+        SS_Port = SS_Port3;
+        return (TRUE);
+    }
 
-   if (SS_TestSoundSource(SS_Port1))
-   {
-      SS_Port = SS_Port1;
-      return (TRUE);
-   }
+    if (SS_TestSoundSource(SS_Port1))
+    {
+        SS_Port = SS_Port1;
+        return (TRUE);
+    }
 
-   if (SS_TestSoundSource(SS_Port2))
-   {
-      SS_Port = SS_Port2;
-      return (TRUE);
-   }
+    if (SS_TestSoundSource(SS_Port2))
+    {
+        SS_Port = SS_Port2;
+        return (TRUE);
+    }
 
-   if (SS_TestSoundSource(SS_Port3))
-   {
-      SS_Port = SS_Port3;
-      return (TRUE);
-   }
+    if (SS_TestSoundSource(SS_Port3))
+    {
+        SS_Port = SS_Port3;
+        return (TRUE);
+    }
 
-   return (FALSE);
+    return (FALSE);
 }
 
 /*---------------------------------------------------------------------
@@ -430,45 +430,45 @@ int SS_Init(
     void)
 
 {
-   int status;
+    int status;
 
-   if (SS_Installed)
-   {
-      SS_Shutdown();
-   }
+    if (SS_Installed)
+    {
+        SS_Shutdown();
+    }
 
-   if (USER_CheckParameter(SELECT_TANDY_SOUNDSOURCE))
-   {
-      // Tandy
-      SS_OffCommand = 0x0e;
-   }
-   else
-   {
-      // Disney
-      SS_OffCommand = 0x0c;
-   }
+    if (USER_CheckParameter(SELECT_TANDY_SOUNDSOURCE))
+    {
+        // Tandy
+        SS_OffCommand = 0x0e;
+    }
+    else
+    {
+        // Disney
+        SS_OffCommand = 0x0c;
+    }
 
-   status = SS_DetectSoundSource();
-   if (!status)
-   {
-      SS_SetErrorCode(SS_NotFound);
-      return (SS_Warning);
-   }
+    status = SS_DetectSoundSource();
+    if (!status)
+    {
+        SS_SetErrorCode(SS_NotFound);
+        return (SS_Warning);
+    }
 
-   status = SS_Ok;
+    status = SS_Ok;
 
-   outp(SS_Port + 2, 4);
+    outp(SS_Port + 2, 4);
 
-   SS_SoundPlaying = FALSE;
+    SS_SoundPlaying = FALSE;
 
-   SS_SetCallBack(NULL);
+    SS_SetCallBack(NULL);
 
-   SS_BufferStart = NULL;
+    SS_BufferStart = NULL;
 
-   SS_Installed = TRUE;
+    SS_Installed = TRUE;
 
-   SS_SetErrorCode(status);
-   return (status);
+    SS_SetErrorCode(status);
+    return (status);
 }
 
 /*---------------------------------------------------------------------
@@ -481,16 +481,16 @@ void SS_Shutdown(
     void)
 
 {
-   // Halt the transfer
-   SS_StopPlayback();
+    // Halt the transfer
+    SS_StopPlayback();
 
-   outp(SS_Port + 2, SS_OffCommand);
+    outp(SS_Port + 2, SS_OffCommand);
 
-   SS_SoundPlaying = FALSE;
+    SS_SoundPlaying = FALSE;
 
-   SS_BufferStart = NULL;
+    SS_BufferStart = NULL;
 
-   SS_SetCallBack(NULL);
+    SS_SetCallBack(NULL);
 
-   SS_Installed = FALSE;
+    SS_Installed = FALSE;
 }

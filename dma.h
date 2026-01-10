@@ -33,18 +33,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 enum DMA_ERRORS
 {
-   DMA_Error = -1,
-   DMA_Ok = 0,
-   DMA_ChannelOutOfRange,
-   DMA_InvalidChannel
+    DMA_Error = -1,
+    DMA_Ok = 0,
+    DMA_ChannelOutOfRange,
+    DMA_InvalidChannel
 };
 
 enum DMA_Modes
 {
-   DMA_SingleShotRead,
-   DMA_SingleShotWrite,
-   DMA_AutoInitRead,
-   DMA_AutoInitWrite
+    DMA_SingleShotRead,
+    DMA_SingleShotWrite,
+    DMA_AutoInitRead,
+    DMA_AutoInitWrite
 };
 
 char *DMA_ErrorString(
