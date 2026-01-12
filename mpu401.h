@@ -26,8 +26,7 @@ enum MPU_ERRORS
 {
     MPU_Warning = -2,
     MPU_Error = -1,
-    MPU_Ok = 0,
-    MPU_DPMI_Error
+    MPU_Ok = 0
 };
 
 #define MPU_NotFound -1
