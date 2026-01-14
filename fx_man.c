@@ -201,7 +201,7 @@ int FX_Init(
 {
     int status;
     int devicestatus;
-    int numchannels;
+    int mode;
     fx_device device;
 
     status = FX_SetupCard(SoundCard, &device);
@@ -216,14 +216,14 @@ int FX_Init(
     case SoundBlaster:
     case ProAudioSpectrum:
     case TandySoundSource:
-        numchannels = 0;
+        mode = MONO_8BIT;
         FX_SampleBits = min(samplebits, device.MaxSampleBits);
         if (samplebits == 16)
         {
-            numchannels |= 2;
+            mode |= MONO_16BIT;
         }
         FX_NumVoices = numvoices;
-        devicestatus = MV_Init(SoundCard, 10000, numvoices, numchannels);
+        devicestatus = MV_Init(SoundCard, 10000, numvoices, mode);
         if (devicestatus != MV_Ok)
         {
             FX_SetErrorCode(FX_MultiVocError);
@@ -336,7 +336,7 @@ int FX_GetVolume(
 
 unsigned long sub_2562C(
     char *data,
-    unsigned long arg1,
+    unsigned long length,
     unsigned int arg2,
     unsigned int arg3)
 {
@@ -347,36 +347,36 @@ unsigned long sub_2562C(
     i = ((long)arg2 << 16) / ((long)arg3);
     if (i <= 0x10000)
     {
-        return arg1;
+        return length;
     }
 
     j = 0;
     ptr = data;
-    arg1 = arg1 << 16;
+    length = length << 16;
 
-    for (; j < arg1; j += i)
+    for (; j < length; j += i)
     {
         *ptr++ = data[j >> 16];
     }
     return ptr - data;
 }
 
-int sub_256BD(char *data)
+int sub_256BD(fx_voc *data)
 {
     char huge *ptr;
-    unsigned long j;
+    unsigned long length;
     unsigned long samplerate;
     unsigned int timeconstant;
     unsigned int i;
 
-    if (*data == 'C')
+    if (data->unk0 == 'C')
     {
-        ptr = data + *(int *)(data + 20);
+        ptr = (char*)data + *(int *)((char*)data + 20);
         while (*ptr > 1)
         {
             ptr++;
-            j = *((unsigned long *)ptr) & 0xFFFFFF;
-            ptr += (j + 3);
+            length = *((unsigned long *)ptr) & 0xFFFFFF;
+            ptr += (length + 3);
         }
 
         if (*ptr == 0)
@@ -386,31 +386,31 @@ int sub_256BD(char *data)
         }
 
         ptr++;
-        j = (*((unsigned long *)ptr) & 0xFFFFFF) - 2;
+        length = (*((unsigned long *)ptr) & 0xFFFFFF) - 2;
         timeconstant = ptr[3];
         ptr += 5;
         samplerate = CalcSamplingRate(timeconstant);
 
         if (FX_SoundDevice == TandySoundSource)
         {
-            j = sub_2562C((char *)ptr, j, 10000, 7000);
+            length = sub_2562C((char *)ptr, length, 10000, 7000);
         }
 
-        *data = 0;
-        *((unsigned long *)&data[1]) = (unsigned long)ptr;
-        *((unsigned long *)&data[5]) = (unsigned long)j;
-        *((unsigned long *)&data[9]) = (unsigned long)samplerate;
+        data->unk0 = 0;
+        data->data = (char*)ptr;
+        data->length = length;
+        data->samplerate = samplerate;
 
         if (FX_SampleBits == 16)
         {
-            for (i = 0; i < j; i++)
+            for (i = 0; i < length; i++)
             {
                 ptr[i] += 0x80;
             }
         }
         else
         {
-            for (i = 0; i < j; i++)
+            for (i = 0; i < length; i++)
             {
                 ptr[i] += 0x80;
                 ptr[i] /= FX_NumVoices;
@@ -428,18 +428,18 @@ int sub_256BD(char *data)
 ---------------------------------------------------------------------*/
 
 int FX_PlayVOC(
-    char *ptr,
-    int arg1,
-    int arg2,
-    int arg3)
+    fx_voc *ptr,
+    int unused1,
+    int unused2,
+    int priority)
 
 {
     int handle;
     int ret;
 
-    (void)arg1;
-    (void)arg2;
-    if (*ptr == 'C')
+    (void)unused1;
+    (void)unused2;
+    if (ptr->unk0 == 'C')
     {
         ret = sub_256BD(ptr);
         if (ret)
@@ -451,7 +451,7 @@ int FX_PlayVOC(
     case SoundBlaster:
     case ProAudioSpectrum:
     case TandySoundSource:
-        handle = MV_PlayVOC(*((int *)&ptr[1]), *((int *)&ptr[3]), *((int *)&ptr[5]), arg3);
+        handle = MV_PlayVOC(ptr->data, ptr->length, priority);
         if (handle != MV_Error)
             break;
         FX_SetErrorCode(FX_MultiVocError);

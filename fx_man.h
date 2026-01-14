@@ -61,17 +61,25 @@ enum fx_BLASTER_Types
     fx_SB16 = 6
 };
 
+typedef struct
+{
+   char unk0;
+   char *data;
+   unsigned long length;
+   unsigned long samplerate;
+} fx_voc;
+
 char *FX_ErrorString(int ErrorNumber);
 int FX_SetupCard(int SoundCard, fx_device *device);
-int FX_Init(int SoundCard, int numvoices, int numchannels);
+int FX_Init(int SoundCard, int numvoices, int samplebits);
 int FX_Shutdown(void);
 void FX_SetVolume(int volume);
 int FX_GetVolume(void);
-int FX_PlayVOC(char *ptr, int arg1, int arg2, int arg3);
+int FX_PlayVOC(fx_voc *ptr, int unused1, int unused2, int priority);
 int FX_SoundActive(int handle);
 int FX_SoundsPlaying(void);
 int FX_StopSound(int handle);
 int FX_StopAllSounds(void);
-int sub_256BD(char *data);
+int sub_256BD(fx_voc *data);
 
 #endif
