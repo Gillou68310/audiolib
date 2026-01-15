@@ -154,7 +154,14 @@ typedef struct
     unsigned char Feedback;
 } TIMBRE;
 
-extern TIMBRE ADLIB_TimbreBank[256];
+typedef struct
+{
+    unsigned char Timbre;
+    unsigned char Key;
+} DRUM_MAP;
+
+extern TIMBRE ADLIB_TimbreBank[174];
+extern DRUM_MAP PercussionTable[128];
 
 static void AL_ResetVoices(void);
 static void AL_CalcPitchInfo(void);

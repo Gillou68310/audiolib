@@ -41,14 +41,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "_al_midi.h"
 #include "ll_man.h"
 
-typedef struct
-{
-    unsigned char Timbre;
-    unsigned char Key;
-} DRUM_MAP;
-
-extern DRUM_MAP PercussionTable[128];
-
 #define TRUE (1 == 1)
 #define FALSE (!TRUE)
 

@@ -17,21 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-typedef struct
-   {
-   unsigned char SAVEK[ 2 ];
-   unsigned char Level[ 2 ];
-   unsigned char Env1[ 2 ];
-   unsigned char Env2[ 2 ];
-   unsigned char Wave[ 2 ];
-   unsigned char Feedback;
-   } TIMBRE;
-
-typedef struct
-   {
-   unsigned char Timbre;
-   unsigned char Key;
-   } DRUM_MAP;
+#include "_al_midi.h"
 
 DRUM_MAP PercussionTable[ 128 ] =
    {

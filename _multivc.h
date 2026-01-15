@@ -78,7 +78,7 @@ static VoiceNode *MV_GetVoice(int handle);
 static VoiceNode *MV_AllocVoice(int priority);
 void sub_2A110(char *to, char *from, int len);
 void sub_2A1B1(char *to, char *from, int len);
-void sub_2A252(char *to, char *from, int len, int arg2);
-void sub_2A333(char *to, char *from, int len, int arg2);
+void sub_2A252(char *to, char *from, int len, int shift);
+void sub_2A333(char *to, char *from, int len, int shift);
 
 #endif
